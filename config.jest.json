@@ -1,0 +1,34 @@
+{
+    "roots": [
+        "restoose"
+    ],
+    "moduleDirectories": [
+      "node_modules"
+    ],
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "coveragePathIgnorePatterns": [
+        "/node_modules/"
+    ],
+    "collectCoverageFrom": [
+      "restoose/**/*.js"
+    ],
+    "coverageReporters": [
+      "html",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 95,
+        "branches": 95,
+        "functions": 95,
+        "lines": 95
+      },
+      "each": {
+        "statements": 95,
+        "branches": 95,
+        "functions": 95,
+        "lines": 95
+      }
+    }
+}
