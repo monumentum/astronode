@@ -8,7 +8,7 @@ exports.NewController = (model) => ({
 });
 
 exports.find = (model, req) => model.find(req.query);
-exports.findOne = (model, req) => model.findOne(req.query);
+exports.findOne = (model, req) => model.findOne(req.params.id);
 exports.create = (model, req) => (new model(req.body)).save();
-exports.update = (model, req) => model.findByIdAndUpdate(req.param('id'), req.body);
-exports.delete = (model, req) => model.findByIdAndDelete(req.param('id'));
+exports.update = (model, req) => model.findByIdAndUpdate(req.params.id, req.body);
+exports.delete = (model, req) => model.findByIdAndDelete(req.params.id);

@@ -33,15 +33,16 @@ function assertMongooseObject(entry, type, expectedObj) {
 
 function constructItForMethods(type, entity, addExpect, arg) {
     let modelPropertyObj;
-
+    addExpect = addExpect || {};
+    
     beforeEach(() => {
         modelPropertyObj = model[type](arg);
     });
 
     it('should create a ' + type + ' with required flag', () => {
         assertMongooseObject(modelPropertyObj.isRequired(), type , Object.assign(
-            { type: entity, required: true },
-            addExpect
+            {type: entity, required: true},
+            addExpect,
         ));
     });
 
@@ -62,27 +63,27 @@ function constructItForMethods(type, entity, addExpect, arg) {
 
     it('should create a ' + type + ' with max lenght', () => {
         const max = 10;
-        assertMongooseObject(modelPropertyObj.hasMax(max), type, { type: entity, max: max, addExpect });
+        assertMongooseObject(modelPropertyObj.hasMax(max), type, Object.assign({ type: entity, max: max },  addExpect));
     });
 
     it('should create a ' + type + ' with min lenght', () => {
         const min = 10;
-        assertMongooseObject(modelPropertyObj.hasMin(min), type, { type: entity, min: min, addExpect });
+        assertMongooseObject(modelPropertyObj.hasMin(min), type, Object.assign({ type: entity, min: min}, addExpect));
     });
 
     it('should create a ' + type + ' with default string', () => {
         const _default = 'the default string';
-        assertMongooseObject(modelPropertyObj.hasDefault(_default), type, { type: entity, default: _default, addExpect });
+        assertMongooseObject(modelPropertyObj.hasDefault(_default), type, Object.assign({ type: entity, default: _default }, addExpect));
     });
 
     it('should create a ' + type + ' with validation string', () => {
         const validation = 'validation stuff';
-        assertMongooseObject(modelPropertyObj.addValidation(validation), type, { type: entity, validation: validation, addExpect });
+        assertMongooseObject(modelPropertyObj.addValidation(validation), type, Object.assign({ type: entity, validation: validation }, addExpect));
     });
 
     it('should create a ' + type + ' with enums', () => {
         const enums = 'enums stuff';
-        assertMongooseObject(modelPropertyObj.hasEnums(enums), type, { type: entity, enum: enums, addExpect });
+        assertMongooseObject(modelPropertyObj.hasEnums(enums), type, Object.assign({ type: entity, enum: enums }, addExpect));
     });
 }
 
