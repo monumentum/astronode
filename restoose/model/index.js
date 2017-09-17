@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const each = require('lodash/each');
 
 function ModelBuilder(type) {
     this.type = type;
@@ -52,7 +53,7 @@ module.exports = {
     bool          : () => new ModelBuilder(Boolean),
     register      : (name, structure, methods) => {
         const mountedSchema = new mongoose.Schema(structure);
-        Object.keys(methods).forEach(key => mountedSchema.static(key, methods[key]));
+        each(methods, (value, key) => mountedSchema.static(key, value));
         mongoose.model(name, mountedSchema);
     },
     ref : ref => {

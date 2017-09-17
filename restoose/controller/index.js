@@ -1,50 +1,14 @@
 const mongoose = require('mongoose');
 
-class Controller {
-    constructor(model, extend) {
-        this.model = mongoose.model(model);
-        this.root = {
-            get: this.find,
-            post: this.create,
-        }
+exports.NewController = (model) => ({
+    'controllerName': model.toLowerCase(),
+    'model': mongoose.model(model),
+    'root': {'get': 'find', 'post': 'create'},
+    'rootId': {'get': 'findOne', 'put': 'update', 'delete': 'delete'}
+});
 
-        this.rootId = {
-            get: this.findById,
-            put: this.update,
-            delete: this.delete,
-        }
-
-        _.forEach(extend, (value, key) => _.set(this, key, value));
-    }
-
-    find(req, res, next) {
-        return this.modelCall(this.model.find({}), res)
-    }
-
-    findById(req, res, next) {
-        return this.modelCall(this.model.findById(req.param('id')), res)
-    }
-
-    create(req, res, next) {
-        const instance = new this.model(req.body);
-        return this.modelCall(instance.save(), res);
-    }
-
-    update(req, res, next) {
-        return this.modelCall(this.model.find(req.param('id'), req.body), res);
-    }
-
-    delete(req, res, next) {
-        return this.modelCall(this.model.delete(req.param('id')), res);
-    }
-
-    modelCall(promise, res) {
-        promise.then((results) => {
-            res.json(200, { results: results })
-        }).catch((error) => {
-            res.json(500, { error: error })
-        });
-    }
-}
-
-module.exports = Controller;
+exports.find = (model, req) => model.find(req.query);
+exports.findOne = (model, req) => model.findOne(req.query);
+exports.create = (model, req) => (new model(req.body)).save();
+exports.update = (model, req) => model.findByIdAndUpdate(req.param('id'), req.body);
+exports.delete = (model, req) => model.findByIdAndDelete(req.param('id'));

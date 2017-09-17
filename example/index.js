@@ -1,17 +1,46 @@
 const express = require('express');
-const Restoose = require('restoose');
+const bodyParser = require('body-parser');
 
-const app = new Restoose(express, {
-    hostname: '0.0.0.0',
-    port: 3000
+const { newServer, initServer, getControllers } = require('../restoose/app');
+
+const server = newServer('myApplication', express, {
+    hostname: process.env.IP,
+    port: process.env.PORT,
+    globalMiddlewares: [],
+    mongoUri: 'mongodb://localhost:27017/restoose-example',
+    coreHandler: (modelResponse, res) => {
+        modelResponse.then(result => {
+            res.status(200).json({ result });
+        }).catch(error => {
+            res.status(400).json({ error });
+        });
+    }
 });
 
-restoose.loadModules('./modules', {
-    ignoreFolder: ['tests'],
-    controller: 'controller.js',
-    model: 'model.js',
-    initControllerIfNotFound: true,
-    recursiveRoute: 2
+server.app.use(bodyParser.json())
+
+server.controllers = getControllers('modules', {
+    autoEndpointForModels: true,
+    recursiveRoute: 2,
+    middlewareModule: 'core/middlewares/index.js',
+    strategy: 'namedModules',
+    strategyConfig: { 
+        ignoreFolders: ['tests'],
+        controllerPattern: 'controller.js',
+        modelPattern: 'model.js',
+    }
 });
 
-app.init();
+// app.loadModules('./modules', {
+//     autoEndpointForModels: true,
+//     recursiveRoute: 2,
+//     middlewareModule: 'core/middlewares/index.js',
+//     strategy: 'indexedModules',
+//     strategyConfig: {
+//         controllerFile: 'controllers/index.js',
+//         modelFile: 'models/index.js'
+//     },
+// });
+
+
+initServer(server);
