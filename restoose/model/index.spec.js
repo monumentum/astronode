@@ -24,12 +24,12 @@ const TYPES = {
     'date': { entity: Date },
     'bool': { entity: Boolean },
     'ref': { entity: mongoose.SchemaTypes.ObjectId, arg: FAKE_REF, expect: { ref: FAKE_REF } }
-}
+};
 
 function assertMongooseObject(entry, type, expectedObj) {
     METHODS.forEach(method => expect(entry[method]).toBe(model[type]()[method]));
     expect(entry).toEqual(expectedObj);
-};
+}
 
 function constructItForMethods(type, entity, addExpect, arg) {
     let modelPropertyObj;
@@ -42,12 +42,12 @@ function constructItForMethods(type, entity, addExpect, arg) {
     it('should create a ' + type + ' with required flag', () => {
         assertMongooseObject(modelPropertyObj.isRequired(), type , Object.assign(
             {type: entity, required: true},
-            addExpect,
+            addExpect
         ));
     });
 
     it('should create a ' + type + ' with required flag with message', () => {
-        const message = 'test error message'
+        const message = 'test error message';
         assertMongooseObject(modelPropertyObj.isRequired(message), type, Object.assign(
             { type: entity, required: [true, message] },
             addExpect
@@ -94,7 +94,7 @@ describe('(restoose/model) Index', () => {
     });
 
     it('should register a module using mongoose', () => {
-        const name = "Test";
+        const name = 'Test';
         const structure = 'fakeStructure';
 
         model.register(name, structure);

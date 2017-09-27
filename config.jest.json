@@ -13,22 +13,12 @@
     "collectCoverageFrom": [
       "restoose/**/*.js"
     ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/restoose/utils/index.js",
+      "<rootDir>/restoose/logger/index.js"
+    ],
     "coverageReporters": [
       "html",
       "lcov"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "statements": 95,
-        "branches": 95,
-        "functions": 95,
-        "lines": 95
-      },
-      "each": {
-        "statements": 95,
-        "branches": 95,
-        "functions": 95,
-        "lines": 95
-      }
-    }
+    ]
 }

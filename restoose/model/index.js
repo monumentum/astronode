@@ -17,34 +17,34 @@ function injectParams(key, value, message) {
 
 ModelBuilder.prototype.isRequired = function (message) {
     return injectParams.call(this, 'required', true, message);
-}
+};
 
 ModelBuilder.prototype.isUnique = function (message) {
     return injectParams.call(this, 'unique', true, message);
-}
+};
 
 ModelBuilder.prototype.hasMax = function (max, message) {
     return injectParams.call(this, 'max', max, message);
-}
+};
 
 ModelBuilder.prototype.hasMin = function (min, message) {
     return injectParams.call(this, 'min', min, message);
-}
+};
 
 ModelBuilder.prototype.hasDefault = function (d) {
     this.default = d;
     return this;
-}
+};
 
 ModelBuilder.prototype.addValidation = function (validation) {
     this.validation = validation;
     return this;
-}
+};
 
 ModelBuilder.prototype.hasEnums = function (possibilities) {
     this.enum = possibilities;
     return this;
-}
+};
 
 module.exports = {
     string        : () => new ModelBuilder(String),
@@ -61,4 +61,4 @@ module.exports = {
         model.ref = ref;
         return model;
     },
-}
+};

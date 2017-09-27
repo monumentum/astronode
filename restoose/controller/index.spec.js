@@ -20,7 +20,7 @@ describe('(restoose/controller) Index', () => {
     });
     
     afterEach(() => {
-       mongoose.model.mockReset();
+        mongoose.model.mockReset();
     });
     
     it('should init a controller', () => {
@@ -38,8 +38,8 @@ describe('(restoose/controller) Index', () => {
         let model = {
             find: jest.fn(), 
             findOne: jest.fn(),
-            findByIdAndUpdate: jest.fn(),
-            findByIdAndDelete: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
         };
     
         it('should call find with correct params', () => {
@@ -49,17 +49,17 @@ describe('(restoose/controller) Index', () => {
         
         it('should call findOne with correct params', () => {
             RestooseController.findOne(model, req);
-            expect(model.findOne).toHaveBeenCalledWith(req.params.id);
+            expect(model.findOne).toHaveBeenCalledWith({ _id: req.params.id });
         });  
         
         it('should call update with correct params', () => {
             RestooseController.update(model, req);
-            expect(model.findByIdAndUpdate).toHaveBeenCalledWith(req.params.id, req.body);
+            expect(model.update).toHaveBeenCalledWith({ _id: req.params.id }, req.body);
         });
         
         it('should call delete with correct params', () => {
             RestooseController.delete(model, req);
-            expect(model.findByIdAndDelete).toHaveBeenCalledWith(req.params.id);
+            expect(model.remove).toHaveBeenCalledWith({ _id: req.params.id });
         });  
     });
 });

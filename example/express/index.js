@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { newServer, initServer, getControllers } = require('../restoose/app');
+const { newServer, initServer, getControllers } = require('../../restoose/app');
 
 const server = newServer('myApplication', express, {
     hostname: process.env.IP,
@@ -17,7 +17,7 @@ const server = newServer('myApplication', express, {
     }
 });
 
-server.app.use(bodyParser.json())
+server.app.use(bodyParser.json());
 
 server.controllers = getControllers('modules', {
     autoEndpointForModels: true,

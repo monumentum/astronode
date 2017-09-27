@@ -1,4 +1,4 @@
-const RestooseModel = require('../../../restoose/model');
+const RestooseModel = require('../../../../restoose/model');
 
 const structure = {
     name: RestooseModel.string().isRequired()
