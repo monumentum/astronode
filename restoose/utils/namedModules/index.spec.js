@@ -1,38 +1,92 @@
-jest.mock('fs', () => ({
-    readdir: (path, cb) => cb(null, [path])
-}));
+jest.mock('fs');
+jest.mock('../safeRequire');
 
-const clone = require('lodash/clone');
-const each = require('lodash/each');
-const namedModulesOriginalPackage = require('./');
+const Promise = require('bluebird');
+const compact = require('lodash/compact');
+const namedModulesPackage = require('./');
+const expecter = pkg => prop => expect(pkg[prop]);
+const spyer = pkg => method => jest.spyOn(pkg, method);
 
-const mockPackage = (pkg, methods) => {
-    let newPackage = clone(pkg);
-    each(methods, method => newPackage[method] = jest.fn());
-    return newPackage;
+const fs = require.requireMock('fs');
+const { safeRequire } = require.requireMock('../safeRequire');
+
+const FAKE = {
+    response: 'FAKE_RESPONSE',
+    files: ['test1.js', 'test2.js', 'ignoredfolder', 'validfolder'],
+    path: 'test',
+    file_paths: ['test1', 'test2'],
+    readdir: ['ignoredFolder', 'file1.js', 'file2.js'],
+    ignoredFolders: ['ignoredFolder'],
+    opts: {},
+    promise: {}
 };
 
-const FAKE_PATH = 'test';
-const FAKE_OPTS = {};
+FAKE.promise = {
+    response: Promise.resolve(FAKE.response),
+    files: Promise.resolve(FAKE.files),
+    readdir: Promise.resolve(FAKE.readdir),
+};
 
 describe('(restoose/utils) Named Modules', () => {
+    let spyOn;
+    
+    beforeEach(() => {
+        spyOn = spyer(namedModulesPackage);
+    });
+    
+    afterEach(() => {
+        jest.restoreAllMocks();
+        safeRequire.mockClear();
+    });
+    
     it('should exec namedModules', () => {
-        const FAKE_RETURN = 'FAKE_RETURN';
-        const FAKE_PROMISE = Promise.resolve(FAKE_RETURN);
+        spyOn('recursivePathMapper').mockReturnValue(FAKE.promise.response);
+        spyOn('loadModels').mockReturnValue(FAKE.promise.response);
+        spyOn('loadControllers').mockReturnValue(FAKE.promise.response);
+        
+        return namedModulesPackage.namedModules(FAKE.path, FAKE.opts).then(result => {
+            const _expect = expecter(namedModulesPackage);
+            
+            _expect('recursivePathMapper').toHaveBeenCalledWith(`${process.cwd()}/test`, FAKE.opts);
+            _expect('loadModels').toHaveBeenCalledWith(FAKE.opts, FAKE.response);
+            _expect('loadControllers').toHaveBeenCalledWith(FAKE.response);
+        });
+    });
+    
+    it('should exec loadControllers', () => {
+        safeRequire.mockReturnValue(FAKE.promise.response);
+        
+        return namedModulesPackage.loadControllers(FAKE.file_paths).then(() => {
+            expect(safeRequire).toHaveBeenCalledTimes(FAKE.file_paths.length);
+        });
+    });
+    
+    it('should exec loadModels', () => {
+        safeRequire.mockReturnValue(FAKE.promise.response);
+        
+        const opts = { modelPattern: 'test' };
+        const paths = ['testInPattern', 'noMatch', 'nonMatchToo'];
+        
+        return namedModulesPackage.loadModels(opts, paths).then(() => {
+            expect(safeRequire).toHaveBeenCalledTimes(1);
+        });
+    });
+    
+    it('should exec recursivePathMapper', () => {
+        spyOn('promiseReaddir').mockReturnValue(FAKE.promise.readdir);
+        const opts = { ignoredFolders: FAKE.ignoredFolders };
+        
+        return namedModulesPackage.recursivePathMapper('', opts).then(files => {
+            expect(files).toHaveLength(FAKE.readdir.length);
+            expect(compact(files)).toHaveLength(2);
+        });
+    });
+    
+    it('should exec promiseReaddir', () => {
+        fs.readdir.mockImplementation((path, cb) => cb(null, [path]));
 
-        const pkg = mockPackage(namedModulesOriginalPackage, [
-            'recursivePathMapper', 'loadModels', 'loadControllers'
-        ]);
-        
-        pkg.recursivePathMapper.mockReturnValue(FAKE_PROMISE);
-        pkg.loadModels.mockReturnValue(FAKE_PROMISE);
-        
-        return pkg.namedModules(FAKE_PATH, FAKE_OPTS).then(() => {
-            expect(pkg.loadModels).toHaveBeenCalledWith(FAKE_OPTS, FAKE_RETURN);
-            expect(pkg.loadControllers).toHaveBeenCalledWith(FAKE_RETURN);
-            expect(pkg.recursivePathMapper).toHaveBeenCalledWith(
-                `${process.cwd()}/${FAKE_PATH}`, FAKE_OPTS
-            ); 
+        return namedModulesPackage.promiseReaddir(FAKE.path).then(files => {
+            expect(files[0]).toBe(FAKE.path);
         });
     });
 });
