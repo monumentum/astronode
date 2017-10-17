@@ -29,59 +29,59 @@ FAKE.promise = {
 
 describe('(restoose/utils) Named Modules', () => {
     let spyOn;
-    
+
     beforeEach(() => {
         spyOn = spyer(namedModulesPackage);
     });
-    
+
     afterEach(() => {
         jest.restoreAllMocks();
         safeRequire.mockClear();
     });
-    
+
     it('should exec namedModules', () => {
         spyOn('recursivePathMapper').mockReturnValue(FAKE.promise.response);
         spyOn('loadModels').mockReturnValue(FAKE.promise.response);
         spyOn('loadControllers').mockReturnValue(FAKE.promise.response);
-        
-        return namedModulesPackage.namedModules(FAKE.path, FAKE.opts).then(result => {
+
+        return namedModulesPackage.namedModules(FAKE.path, FAKE.opts).then(() => {
             const _expect = expecter(namedModulesPackage);
-            
+
             _expect('recursivePathMapper').toHaveBeenCalledWith(`${process.cwd()}/test`, FAKE.opts);
             _expect('loadModels').toHaveBeenCalledWith(FAKE.opts, FAKE.response);
             _expect('loadControllers').toHaveBeenCalledWith(FAKE.response);
         });
     });
-    
+
     it('should exec loadControllers', () => {
         safeRequire.mockReturnValue(FAKE.promise.response);
-        
+
         return namedModulesPackage.loadControllers(FAKE.file_paths).then(() => {
             expect(safeRequire).toHaveBeenCalledTimes(FAKE.file_paths.length);
         });
     });
-    
+
     it('should exec loadModels', () => {
         safeRequire.mockReturnValue(FAKE.promise.response);
-        
+
         const opts = { modelPattern: 'test' };
         const paths = ['testInPattern', 'noMatch', 'nonMatchToo'];
-        
+
         return namedModulesPackage.loadModels(opts, paths).then(() => {
             expect(safeRequire).toHaveBeenCalledTimes(1);
         });
     });
-    
+
     it('should exec recursivePathMapper', () => {
         spyOn('promiseReaddir').mockReturnValue(FAKE.promise.readdir);
         const opts = { ignoredFolders: FAKE.ignoredFolders };
-        
+
         return namedModulesPackage.recursivePathMapper('', opts).then(files => {
             expect(files).toHaveLength(FAKE.readdir.length);
             expect(compact(files)).toHaveLength(2);
         });
     });
-    
+
     it('should exec promiseReaddir', () => {
         fs.readdir.mockImplementation((path, cb) => cb(null, [path]));
 

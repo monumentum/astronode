@@ -4,8 +4,8 @@
   "description": "From mongo to the world",
   "main": "index.js",
   "dependencies": {
-    "body-parser": "^1.18.1",
-    "express": "^4.15.4",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.1",
     "jest-plugin-fs": "^2.5.0",
     "mongoose": "^4.11.9",
     "winston": "^2.3.1"
@@ -19,7 +19,8 @@
     "test": "jest --config config.jest.json --coverage",
     "test:dev": "jest --config config.jest.json --watch",
     "lint": "eslint --config .eslintrc restoose",
-    "lint:fix": "eslint --config .eslintrc restoose --fix"
+    "lint:fix": "eslint --config .eslintrc restoose --fix",
+    "coveralls": "cat coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",

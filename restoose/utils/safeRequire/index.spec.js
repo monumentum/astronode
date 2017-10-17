@@ -32,4 +32,4 @@ describe('(restoose/utils) safeRequire', () => {
     it('should successfuly require the file', () => {
         expect(() => safeRequire('./')).not.toThrow(expectedError);
     });
-})
+});

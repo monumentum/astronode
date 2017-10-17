@@ -23,7 +23,7 @@ exports.recursivePathMapper = (path, opts) => {
     return exports.promiseReaddir(path).map(item => {
         if (isIgnored(item, opts.ignoredFolders)) return Promise.resolve(null);
         if (!isFile(item)) return exports.recursivePathMapper(`${path}/${item}`, opts);
-        
+
         return Promise.resolve(`${path}/${item}`);
     }, CONCURRENCY);
 };
@@ -31,14 +31,14 @@ exports.recursivePathMapper = (path, opts) => {
 exports.loadModels = (opts, allPaths) => {
     let controllers = [];
     let flattedPaths = _.flatten(allPaths);
-    
+
     _.forEach(flattedPaths, path => {
         if (matchPattern(path, opts.modelPattern)) {
             return safeRequire(path);
         }
         controllers.push(path);
     });
-    
+
     return Promise.resolve(_.xor(controllers, null));
 };
 
