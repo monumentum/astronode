@@ -5,6 +5,16 @@
 # Get started
 Restoose is used for generating a REST API using mongoose, it requires node 8+ and mongo 3+.
 
+# Why Astronaut?
+1 - Easy to setup
+2 - Easy to maintain
+3 - Support to many kinds of middleware/web libs
+  3.1 - For that reason easy to make any transition between libs, example: express to restify
+  3.2 - Modularized functions and modules to use with/without all ecosystem
+  3.3 - Cluster support
+4 - Good documentation (end users/contributing)
+5 - Simple code, you can contribute if you think that something are missing <3
+
 # Contribuiting
 1 - First of all you need to install this repo.
 

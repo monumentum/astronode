@@ -1,10 +1,11 @@
 {
-  "name": "restoose",
+  "name": "astronaut",
   "version": "1.0.0",
   "description": "From mongo to the world",
-  "main": "index.js",
+  "main": "astronaut/index.js",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "commander": "^2.12.2",
     "express": "^4.16.1",
     "jest-plugin-fs": "^2.5.0",
     "mongoose": "^4.11.9",
@@ -19,13 +20,13 @@
   "scripts": {
     "test": "jest --config config.jest.json --coverage",
     "test:dev": "jest --config config.jest.json --watch",
-    "lint": "eslint --config .eslintrc restoose",
-    "lint:fix": "eslint --config .eslintrc restoose --fix",
+    "lint": "eslint --config .eslintrc astronaut",
+    "lint:fix": "eslint --config .eslintrc astronaut --fix",
     "coveralls": "cat coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/guidiego/restoose.git"
+    "url": "git+https://github.com/guidiego/astronaut.git"
   },
   "keywords": [
     "mongo",
@@ -38,7 +39,7 @@
   "author": "Guilherme Diego <guidiego.expgames@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/guidiego/restoose/issues"
+    "url": "https://github.com/guidiego/astronaut/issues"
   },
-  "homepage": "https://github.com/guidiego/restoose#readme"
+  "homepage": "https://github.com/guidiego/astronaut#readme"
 }
