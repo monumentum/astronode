@@ -1,18 +1,22 @@
-const { registerModules, registerMiddleware } = require('./register');
+const Promise = require('bluebird');
+const { registerModules, registerMiddleware } = require('../register');
 
-exports.express = require('./express');
+const engine = require('./engine');
+const driver = require('./driver');
 
-exports.selectEngine = engineName => {
-    if (exports[engineName]) throw new Error();
-    return exports[engineName]();
-}
+exports.mountApp = (normalizedConfig, normalizedRoute)  => {
+    return Promise.all([
+        registerModules(normalizedConfig),
+        registerMiddleware(normalizedConfig),
+    ]).then(() => {
+        const engineAdapter = new engine[normalizedConfig.engine]();
+        const driverAdapter = driver[normalizedConfig.driver];
 
-exports.mountApp = function (libName, normalizedConfig, normalizedRoute) {
-    const controllers = registerModules(normalizedConfig.modulesFolder);
-    const middlewares = registerMiddleware(normalizedConfig.middlewareFolder);
+        driverAdapter.start(normalizedConfig.driverConfig);
 
-    exports.selectEngine(libName, normalizeConfig);
-    adapter.insertRoutes(normalizedRoute);
+        engineAdapter.setServices(driverAdapter.Services);
+        engineAdapter.setRoutes(normalizedRoute);
 
-    return adapter.app;
+        return engineAdapter;
+    });
 }

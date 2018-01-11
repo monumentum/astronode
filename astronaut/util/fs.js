@@ -1,25 +1,29 @@
 const fs = require('fs');
 const Promise = require('bluebird');
 
+const { compact, flattenDeep } = require('lodash');
+
 const callback = (resolve, reject) => (err, items) => {
     if (err) return reject(err);
     return resolve(items);
 }
 
-const isFile = file => {}
-const isIgnored = file => {}
+const hasPattern = (pattern, path) =>
+    !!path.match(new RegExp(pattern, "g"));
+
+const isIgnored = (file, ignored) => {
+    return ~ignored.indexOf(file)
+}
+const isFile = file => hasPattern(".js$", file);
 
 exports.readdir = path => new Promise((resolve, reject) => {
     fs.readdir(path, callback(resolve, reject));
 });
 
-exports.recursiveDir = path =>
+exports.recursiveDir = (path, opts = {}) =>
     exports.readdir(path).map(file => {
-        if (isIgnored(file)) return Promise.resolve(null);
+        if (opts.ignored && isIgnored(file, opts.ignored)) return Promise.resolve(null);
         if (isFile(file)) return Promise.resolve(`${path}/${file}`);
 
-        return exports.recursiveDir(`${path}/${file}`);
-    });
-
-exports.requireDeepDir = path =>
-    exports.recursiveDir(path).map(require);
+        return exports.recursiveDir(`${path}/${file}`, opts);
+    }).then(compact).then(flattenDeep)

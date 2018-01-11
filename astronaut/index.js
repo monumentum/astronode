@@ -1,14 +1,31 @@
-const CONFIG_FILE = 'astronaut.config.json';
-const ROUTE_FILE = 'astronaut.route.json';
-
+const { omit } = require('lodash');
 const { mountApp } = require('./adapter');
 const { normalizeProcessVariables, initDatabase } = require('./util');
 
-const APPLICATION_ROOT_PATH = process.cwd();
+const CONFIG_FILE = 'astronaut.config.json';
+const ROUTE_FILE = 'astronaut.route.json';
 
-exports.runAstronaut = ({ configFile, routeFile, libName }) => {
-    configFile = `${APPLICATION_ROOT_PATH}/${configFile}`;
-    routeFile = `${APPLICATION_ROOT_PATH}/${routeFile}`;
+global.astronaut = {
+    ROOT_PATH: process.cwd(),
+    middlewares: {},
+    controllers: {},
+    models: {},
+    config: {}
+}
+
+exports.runServerFunction = adapter => {
+    require(astronaut.MODULES_PATH).server(adapter.app);
+    return adapter;
+}
+
+exports.initServer = adapter => {
+    return adapter.start();
+}
+
+
+exports.runAstronaut = ({ configFile, routeFile }) => {
+    configFile = `${astronaut.ROOT_PATH}/${configFile}`;
+    routeFile = `${astronaut.ROOT_PATH}/${routeFile}`;
 
     const configs = require(configFile);
     const route = require(routeFile);
@@ -16,8 +33,10 @@ exports.runAstronaut = ({ configFile, routeFile, libName }) => {
     const normalizedConfig = normalizeProcessVariables(configs);
     const normalizedRoute = normalizeProcessVariables(route);
 
-    initDatabase(normalizedConfig.database);
-    return mountApp(libName, normalizedConfig, normalizedRoute);
+    astronaut.MODULES_PATH = `${astronaut.ROOT_PATH}/${normalizedConfig.modules.root}`;
+    astronaut.config = omit(normalizedConfig, 'database', 'modules', 'middleware');
+
+    return mountApp(normalizedConfig, normalizedRoute);
 }
 
 if (module === require.main) {
@@ -27,8 +46,9 @@ if (module === require.main) {
         .version('0.1.0')
         .option('-C, --configFile <config_file>', 'Select configs file', CONFIG_FILE)
         .option('-R, --routeFile <route_file>', 'Select routes file', ROUTE_FILE)
-        .option('-L, --libName <lib>', 'Select lib installed', /^(express)$/i)
         .parse(process.argv);
 
-    exports.runAstronaut(program);
+    exports.runAstronaut(program)
+        .then(exports.runServerFunction)
+        .then(exports.initServer);
 }
