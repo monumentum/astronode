@@ -7,7 +7,7 @@ class Express extends EnginerAdapter{
         this._express = require('express');
         this.app = this._express();
 
-        this.app.use(bodyParser.urlencoded());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
         this.app.use(bodyParser.json());
     }
 

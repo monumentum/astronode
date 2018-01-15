@@ -50,5 +50,5 @@ if (module === require.main) {
 
     exports.runAstronaut(program)
         .then(exports.runServerFunction)
-        .then(exports.initServer);
+        .then(exports.initServer)
 }

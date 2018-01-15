@@ -1,53 +1,90 @@
-const { omit } = require('lodash');
+const { omit, each } = require('lodash');
+const Promise = require('bluebird');
 
-exports.constructUri = opts => ({
-    uri: `mongodb://${opts.uri}:${opts.port}/${opts.database}`,
-    options: omit(opts, 'uri', 'port', 'database'),
-});
+class MongooseService {
+    constructor(model) {
+        this.model = model;
 
-exports.Services = modelName => {
-    const Model = astronaut.models[modelName.toLowerCase()];
+        this.find = this.find.bind(this);
+        this.findById = this.findById.bind(this);
+        this.create = this.create.bind(this);
+        this.update = this.update.bind(this);
+        this.delete = this.delete.bind(this);
+    }
 
-    return {
-        find: req => Model.find().exec().then(r=>{console.log(r); return r}),
-        create: req => (new Model(req.body)).save(),
-        findById: req => Model.findById(req.params.id),
-        delete: req => Model.findByIdAndRemove(req.params.id),
-        update: req => Model.findByIdAndUpdate(req.params.id, { $set: req.body }),
+    find(req) {
+        return this.model.find().exec();
+    }
+
+    findById(req) {
+        return this.model
+                .findOne({ _id: req.params.id})
+                .exec();
+    }
+
+    create(req) {
+        const item = new this.model(req.body);
+        return item.save();
+    }
+
+    update(req) {
+        return this.model.findByIdAndUpdate(req.params.id, {$set:req.body});
+    }
+
+    delete(req) {
+        return this.model.findByIdAndRemove(req.params.id);
     }
 }
 
-exports.start = (opts) => {
-    console.log("START");
-    const {uri, options} = exports.constructUri(opts);
-    const mongoose = require('mongoose');
+class MongooseAdapter {
+    constructor(opts) {
+        this.uri = `mongodb://${opts.uri}:${opts.port}/${opts.database}`;
+        this.opts = omit(opts, 'uri', 'port', 'database');
 
-    mongoose.Promise = require('bluebird');
+        this.mongoose = require('mongoose');
+        this.services = this.services.bind(this);
+    }
 
-    const mongoConnection = mongoose.createConnection(uri, options);
+    services(modelName) {
+        const model = this.conn.model(modelName)
+        return new MongooseService(model);
+    }
 
-    mongoConnection.on('connected', function () {
-        console.log('Mongoose default connection open to ' + uri);
-    });
+    start() {
+        this.mongoose.Promise = require('bluebird');
+        this.conn = this.mongoose.createConnection(this.uri, this.opts);
 
-    mongoConnection.on('error', function (err) {
-        console.log('Mongoose default connection error: ' + err);
-    });
-
-    mongoConnection.on('disconnected', function () {
-        console.log('Mongoose default connection disconnected');
-    });
-
-    mongoConnection.on('open', function () {
-        console.log('Mongoose default connection is open');
-    });
-
-    process.on('SIGINT', function() {
-        mongoConnection.close(function () {
-            console.log('Mongoose default connection disconnected through app termination');
-            process.exit(0);
+        this.conn.on('error', err => {
+            console.log('Mongoose default connection error: ' + err);
         });
-    });
 
-    return mongoConnection;
+        this.conn.on('disconnected', () => {
+            console.log('Mongoose default connection disconnected');
+        });
+
+        process.on('SIGINT', () => {
+            this.conn.close(() => {
+                console.log('Mongoose default connection disconnected through app termination');
+                process.exit(0);
+            });
+        });
+
+        return new Promise(resolve => {
+            this.conn.on('connected', () => {
+                console.log('Mongoose default connection open to ' + this.uri);
+                this._registerModels();
+                resolve();
+            });
+        });
+    }
+
+    _registerModels() {
+        each(astronaut.models, (schema, name) => {
+            astronaut.models[name] = this.conn.model(
+                name, new this.mongoose.Schema(schema)
+            );
+        });
+    }
 }
+
+module.exports = MongooseAdapter;

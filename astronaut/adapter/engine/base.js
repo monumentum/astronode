@@ -12,7 +12,7 @@ const DEFAULT_ROUTES = {
     }
 };
 
-class EnginerAdapter {
+class EngineAdapter {
     static promisedResponse(promise) {
         return (req, res) =>
             promise(req)
@@ -30,7 +30,7 @@ class EnginerAdapter {
             this.createRoute(
                 path + innerPath,
                 method, pathMiddle,
-                EnginerAdapter.promisedResponse(services[serviceName])
+                EngineAdapter.promisedResponse(services[serviceName])
             );
         });
     }
@@ -60,4 +60,4 @@ class EnginerAdapter {
 
 }
 
-module.exports = EnginerAdapter;
+module.exports = EngineAdapter;

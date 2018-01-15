@@ -4,11 +4,8 @@
   "description": "From mongo to the world",
   "main": "astronaut/index.js",
   "dependencies": {
-    "body-parser": "^1.18.2",
     "commander": "^2.12.2",
-    "express": "^4.16.1",
     "jest-plugin-fs": "^2.5.0",
-    "mongoose": "^4.11.9",
     "winston": "^2.3.1"
   },
   "devDependencies": {
