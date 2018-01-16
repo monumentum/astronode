@@ -1,14 +1,14 @@
 const { get, each } = require('lodash');
 
 const DEFAULT_ROUTES = {
-    "/": {
-        "get": "find",
-        "post": "create",
+    '/': {
+        'get': 'find',
+        'post': 'create',
     },
-    "/:id": {
-        "get": "findById",
-        "put": "update",
-        "delete": "delete"
+    '/:id': {
+        'get': 'findById',
+        'put': 'update',
+        'delete': 'delete'
     }
 };
 
@@ -16,8 +16,8 @@ class EngineAdapter {
     static promisedResponse(promise) {
         return (req, res) =>
             promise(req)
-            .then(response => res.status(200).json(response))
-            .catch(error => res.status(500).json({ error }))
+                .then(response => res.status(200).json(response))
+                .catch(error => res.status(500).json({ error }));
     }
 
     _interateDefaultRouter(path, config, endpoints, innerPath) {
@@ -37,17 +37,17 @@ class EngineAdapter {
 
     _setRoute(config, path) {
         if (config.defaultRoutes) {
-            if (!config.model) throw new MissingRouteConfiguration(path, 'module');
+            if (!config.model) throw new Error('@TODO MissingRouteConfiguration: ', path, 'module');
             each(DEFAULT_ROUTES, this._interateDefaultRouter.bind(this, path, config));
         }
     }
 
     createRoute(config, path) {
-        throw new NeedImplementation();
+        throw new Error('@TODO: NeedImplementation', path);
     }
 
     start() {
-        throw new NeedImplementation();
+        throw new Error('@TODO: NeedImplementation');
     }
 
     setRoutes(routes) {

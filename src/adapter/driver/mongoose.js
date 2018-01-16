@@ -12,14 +12,14 @@ class MongooseService {
         this.delete = this.delete.bind(this);
     }
 
-    find(req) {
+    find() {
         return this.model.find().exec();
     }
 
     findById(req) {
         return this.model
-                .findOne({ _id: req.params.id})
-                .exec();
+            .findOne({ _id: req.params.id})
+            .exec();
     }
 
     create(req) {
@@ -46,7 +46,7 @@ class MongooseAdapter {
     }
 
     services(modelName) {
-        const model = this.conn.model(modelName)
+        const model = this.conn.model(modelName);
         return new MongooseService(model);
     }
 

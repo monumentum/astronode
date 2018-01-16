@@ -1,9 +1,9 @@
 
-# Restoose
-[![Build Status](https://travis-ci.org/restoose/restoose.svg?branch=master)](https://travis-ci.org/restoose/restoose) [![Coverage Status](https://coveralls.io/repos/github/restoose/restoose/badge.svg?branch=master)](https://coveralls.io/github/restoose/restoose?branch=master) [![bitHound Overall Score](https://www.bithound.io/github/restoose/restoose/badges/score.svg)](https://www.bithound.io/github/restoose/restoose) [![bitHound Dev Dependencies](https://www.bithound.io/github/restoose/restoose/badges/devDependencies.svg)](https://www.bithound.io/github/restoose/restoose/master/dependencies/npm) [![bitHound Dependencies](https://www.bithound.io/github/restoose/restoose/badges/dependencies.svg)](https://www.bithound.io/github/restoose/restoose/master/dependencies/npm)
+# Astronaut JS
+[![Build Status](https://travis-ci.org/monumentum/astronaut.js.svg?branch=master)](https://travis-ci.org/monumentum/astronaut.js) [![Coverage Status](https://coveralls.io/repos/github/monumentum/astronaut.js/badge.svg?branch=master)](https://coveralls.io/github/monumentum/astronaut.js?branch=master) [![bitHound Code](https://www.bithound.io/github/monumentum/astronaut.js/badges/code.svg)](https://www.bithound.io/github/monumentum/astronaut.js) [![bitHound Overall Score](https://www.bithound.io/github/monumentum/astronaut.js/badges/score.svg)](https://www.bithound.io/github/monumentum/astronaut.js) [![bitHound Dependencies](https://www.bithound.io/github/monumentum/astronaut.js/badges/dependencies.svg)](https://www.bithound.io/github/monumentum/astronaut.js/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/monumentum/astronaut.js/badges/devDependencies.svg)](https://www.bithound.io/github/monumentum/astronaut.js/master/dependencies/npm)  
 
 # Get started
-Restoose is used for generating a REST API using mongoose, it requires node 8+ and mongo 3+.
+Astronaut is used for generating a REST API using mongoose, it requires node 7+ and mongo 3+.
 
 # Why Astronaut?
 1 - Easy to setup
@@ -19,7 +19,7 @@ Restoose is used for generating a REST API using mongoose, it requires node 8+ a
 1 - First of all you need to install this repo.
 
 ```
-git clone https://github.com/restoose/restoose.git
+git clone https://github.com/monumentum/astronaut.js.git
 
 npm install
 ```

@@ -1,6 +1,6 @@
 const { omit } = require('lodash');
 const { mountApp } = require('./adapter');
-const { normalizeProcessVariables, initDatabase } = require('./util');
+const { normalizeProcessVariables } = require('./util');
 
 const CONFIG_FILE = 'astronaut.config.json';
 const ROUTE_FILE = 'astronaut.route.json';
@@ -11,16 +11,16 @@ global.astronaut = {
     controllers: {},
     models: {},
     config: {}
-}
+};
 
 exports.runServerFunction = adapter => {
     require(astronaut.MODULES_PATH).server(adapter.app);
     return adapter;
-}
+};
 
 exports.initServer = adapter => {
     return adapter.start();
-}
+};
 
 
 exports.runAstronaut = ({ configFile, routeFile }) => {
@@ -37,7 +37,7 @@ exports.runAstronaut = ({ configFile, routeFile }) => {
     astronaut.config = omit(normalizedConfig, 'database', 'modules', 'middleware');
 
     return mountApp(normalizedConfig, normalizedRoute);
-}
+};
 
 if (module === require.main) {
     const program = require('commander');
@@ -50,5 +50,5 @@ if (module === require.main) {
 
     exports.runAstronaut(program)
         .then(exports.runServerFunction)
-        .then(exports.initServer)
+        .then(exports.initServer);
 }

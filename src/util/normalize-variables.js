@@ -8,7 +8,7 @@ const normalize = value => {
     return value;
 };
 
-const normalizeArray = values => map(values, normalize)
+const normalizeArray = values => map(values, normalize);
 const normalizeObject = values => mapValues(values, normalize);
 
 module.exports = values => normalizeObject(values);
