@@ -19,19 +19,5 @@
     ],
     "moduleNameMapper": {
       ".*config.jest.json": "<rootDir>/tests/__mocks__/config.mock.json"
-    },
-    "coverageThreshold": {
-      "global": {
-        "statements": 90,
-        "branches": 90,
-        "functions": 90,
-        "lines": 90
-      },
-      "each": {
-        "statements": 90,
-        "branches": 90,
-        "functions": 90,
-        "lines": 90
-      }
     }
 }
