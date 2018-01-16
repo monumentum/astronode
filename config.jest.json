@@ -1,6 +1,6 @@
 {
     "roots": [
-        "restoose"
+      "tests"
     ],
     "moduleDirectories": [
       "node_modules"
@@ -8,20 +8,18 @@
     "testEnvironment": "node",
     "coverageDirectory": "coverage",
     "coveragePathIgnorePatterns": [
-        "/node_modules/"
+        "<rootDir>/node_modules/"
     ],
     "collectCoverageFrom": [
-      "restoose/**/*.js"
-    ],
-    "coveragePathIgnorePatterns": [
-      "<rootDir>/restoose/utils/index.js",
-      "<rootDir>/restoose/logger/index.js",
-      "<rootDir>/restoose/connector/index.js"
+      "src/**/*.js"
     ],
     "coverageReporters": [
       "html",
       "lcov"
     ],
+    "moduleNameMapper": {
+      ".*config.jest.json": "<rootDir>/tests/__mocks__/config.mock.json"
+    },
     "coverageThreshold": {
       "global": {
         "statements": 90,
