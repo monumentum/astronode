@@ -1,6 +1,6 @@
 {
-  "name": "astronaut",
-  "version": "1.0.0",
+  "name": "astronaut.js",
+  "version": "0.0.1",
   "description": "From mongo to the world",
   "main": "astronaut/index.js",
   "dependencies": {
