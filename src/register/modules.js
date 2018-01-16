@@ -1,13 +1,6 @@
 const { fs, getModuleName } = require('../util');
 
-const hasPattern = (pattern, path) =>
-    !!path.match(new RegExp(pattern, 'g'));
-
-const isController = (config, path) =>
-    hasPattern(config.modelPattern, path);
-
-const isModel = (config, path) =>
-    hasPattern(config.modelPattern, path);
+const hasPattern = (pattern, path) => !!path.match(new RegExp(pattern, 'g'));
 
 module.exports = config =>
     fs.recursiveDir(`${astronaut.ROOT_PATH}/${config.modules.root}`, { ignored: config.modules.ignored })
@@ -18,11 +11,11 @@ module.exports = config =>
                 return;
             }
 
-            if (isController(config.modules.controllerPattern, path)) {
+            if (hasPattern(config.modules.controllerPattern, path)) {
                 astronaut.controllers[_module] = require(path);
             }
 
-            if (isModel(config.modules.modelPattern, path)) {
+            if (hasPattern(config.modules.modelPattern, path)) {
                 astronaut.models[_module] = require(path);
             }
         });

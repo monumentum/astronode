@@ -21,21 +21,31 @@ class EngineAdapter {
     }
 
     _interateDefaultRouter(path, config, endpoints, innerPath) {
-        const services = this._service(config.model);
+        const services = config.model ? this._service(config.model) : {};
 
         each(endpoints, (serviceName, method) => {
             const pathMiddle = get(config.middlewares, `${innerPath}.${method}`, [])
                 .map(name => astronaut.middlewares[name]);
 
+            const promise = get(astronaut.controllers, serviceName, services && services[serviceName]);
+
+            if (!promise) {
+                throw new Error('@TODO NotAllowedService', serviceName);
+            }
+
             this.createRoute(
                 path + innerPath,
                 method, pathMiddle,
-                EngineAdapter.promisedResponse(services[serviceName])
+                EngineAdapter.promisedResponse(promise)
             );
         });
     }
 
     _setRoute(config, path) {
+        if (config.routes) {
+            each(config.routes, this._interateDefaultRouter.bind(this, path, config))
+        }
+
         if (config.defaultRoutes) {
             if (!config.model) throw new Error('@TODO MissingRouteConfiguration: ', path, 'module');
             each(DEFAULT_ROUTES, this._interateDefaultRouter.bind(this, path, config));
