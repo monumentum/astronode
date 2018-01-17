@@ -43,7 +43,7 @@ class EngineAdapter {
 
     _setRoute(config, path) {
         if (config.routes) {
-            each(config.routes, this._interateDefaultRouter.bind(this, path, config))
+            each(config.routes, this._interateDefaultRouter.bind(this, path, config));
         }
 
         if (config.defaultRoutes) {

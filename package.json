@@ -4,15 +4,19 @@
   "description": "From mongo to the world",
   "main": "astronaut/index.js",
   "dependencies": {
+    "bluebird": "^3.5.1",
     "commander": "^2.12.2",
     "jest-plugin-fs": "^2.5.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
+    "body-parser": "^1.18.2",
     "coveralls": "^3.0.0",
     "eslint": "^4.7.0",
-    "jest": "^21.2.1"
+    "express": "^4.16.2",
+    "jest": "^21.2.1",
+    "mongoose": "^4.13.9"
   },
   "scripts": {
     "test": "jest --config config.jest.json --coverage",
