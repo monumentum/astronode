@@ -7,7 +7,7 @@
     },
     "globals": {
         "global": true,
-        "astronaut": true,
+        "astronode": true,
         "exports": true,
         "require": true,
         "jest": true,

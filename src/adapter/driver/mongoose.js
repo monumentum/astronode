@@ -79,8 +79,8 @@ class MongooseAdapter {
     }
 
     _registerModels() {
-        each(astronaut.models, (schema, name) => {
-            astronaut.models[name] = this.conn.model(
+        each(astronode.models, (schema, name) => {
+            astronode.models[name] = this.conn.model(
                 name, new this.mongoose.Schema(schema)
             );
         });

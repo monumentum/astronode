@@ -14,8 +14,8 @@ describe('src.index', () => {
         util.normalizeProcessVariables.mockReturnValue(config);
     });
 
-    it('should run .runAstronaut', () => {
-        main.runAstronaut({ configFile: 'config.jest.json', routeFile: 'config.jest.json'});
+    it('should run .runAstronode', () => {
+        main.runAstronode({ configFile: 'config.jest.json', routeFile: 'config.jest.json'});
         expect(util.normalizeProcessVariables).toHaveBeenCalledWith(config);
         expect(adapter.mountApp).toHaveBeenCalledWith(config, config);
     });

@@ -16,8 +16,8 @@ class Express extends EnginerAdapter{
     }
 
     start() {
-        this.app.listen(astronaut.config.port, astronaut.config.host, () => {
-            console.log(`Express server up on <http://${astronaut.config.host}:${astronaut.config.port}/>`);
+        this.app.listen(astronode.config.port, astronode.config.host, () => {
+            console.log(`Express server up on <http://${astronode.config.host}:${astronode.config.port}/>`);
         });
     }
 }

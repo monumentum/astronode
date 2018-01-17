@@ -2,10 +2,10 @@ const { omit } = require('lodash');
 const { mountApp } = require('./adapter');
 const { normalizeProcessVariables } = require('./util');
 
-const CONFIG_FILE = 'astronaut.config.json';
-const ROUTE_FILE = 'astronaut.route.json';
+const CONFIG_FILE = 'astronode.config.json';
+const ROUTE_FILE = 'astronode.route.json';
 
-global.astronaut = {
+global.astronode = {
     ROOT_PATH: process.cwd(),
     middlewares: {},
     controllers: {},
@@ -14,7 +14,7 @@ global.astronaut = {
 };
 
 exports.runServerFunction = adapter => {
-    require(astronaut.MODULES_PATH).server(adapter.app);
+    require(astronode.MODULES_PATH).server(adapter.app);
     return adapter;
 };
 
@@ -23,9 +23,9 @@ exports.initServer = adapter => {
 };
 
 
-exports.runAstronaut = ({ configFile, routeFile }) => {
-    configFile = `${astronaut.ROOT_PATH}/${configFile}`;
-    routeFile = `${astronaut.ROOT_PATH}/${routeFile}`;
+exports.runAstronode = ({ configFile, routeFile }) => {
+    configFile = `${astronode.ROOT_PATH}/${configFile}`;
+    routeFile = `${astronode.ROOT_PATH}/${routeFile}`;
 
     const configs = require(configFile);
     const route = require(routeFile);
@@ -33,8 +33,8 @@ exports.runAstronaut = ({ configFile, routeFile }) => {
     const normalizedConfig = normalizeProcessVariables(configs);
     const normalizedRoute = normalizeProcessVariables(route);
 
-    astronaut.MODULES_PATH = `${astronaut.ROOT_PATH}/${normalizedConfig.modules.root}`;
-    astronaut.config = omit(normalizedConfig, 'database', 'modules', 'middleware');
+    astronode.MODULES_PATH = `${astronode.ROOT_PATH}/${normalizedConfig.modules.root}`;
+    astronode.config = omit(normalizedConfig, 'database', 'modules', 'middleware');
 
     return mountApp(normalizedConfig, normalizedRoute);
 };
@@ -48,7 +48,7 @@ if (module === require.main) {
         .option('-R, --routeFile <route_file>', 'Select routes file', ROUTE_FILE)
         .parse(process.argv);
 
-    exports.runAstronaut(program)
+    exports.runAstronode(program)
         .then(exports.runServerFunction)
         .then(exports.initServer);
 }

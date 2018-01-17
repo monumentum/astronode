@@ -25,9 +25,9 @@ class EngineAdapter {
 
         each(endpoints, (serviceName, method) => {
             const pathMiddle = get(config.middlewares, `${innerPath}.${method}`, [])
-                .map(name => astronaut.middlewares[name]);
+                .map(name => astronode.middlewares[name]);
 
-            const promise = get(astronaut.controllers, serviceName, services && services[serviceName]);
+            const promise = get(astronode.controllers, serviceName, services && services[serviceName]);
 
             if (!promise) {
                 throw new Error('@TODO NotAllowedService', serviceName);
