@@ -20,14 +20,15 @@ exports.readdir = path => new Promise((resolve, reject) => {
     fs.readdir(path, callback(resolve, reject));
 });
 
-exports.recursiveDir = (path, opts = {}) =>
-    exports.readdir(path).map(file => {
+exports.recursiveDir = (path, opts = {}) => {
+    console.log(path, opts)
+    return exports.readdir(path).map(file => {
         if (opts.ignored && isIgnored(file, opts.ignored)) return Promise.resolve(null);
         if (isFile(file)) return Promise.resolve(`${path}/${file}`);
 
         return exports.recursiveDir(`${path}/${file}`, opts);
     }).then(compact).then(flattenDeep);
-
+}
 exports.writeFile = (name, file) => new Promise((resolve, reject) => {
     fs.writeFile(name, file, (err) => {
         if (err) return reject(err);

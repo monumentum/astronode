@@ -46,7 +46,7 @@ class EngineAdapter {
             each(config.routes, this._interateDefaultRouter.bind(this, path, config));
         }
 
-        if (config.defaultRoutes) {
+        if (config.defaultApi) {
             if (!config.model) throw new Error('@TODO MissingRouteConfiguration: ', path, 'module');
             each(DEFAULT_ROUTES, this._interateDefaultRouter.bind(this, path, config));
         }

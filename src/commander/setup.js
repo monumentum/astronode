@@ -5,10 +5,15 @@ const { fs } = require('../util');
 const astronautConfig = {
     port: 3000,
     host: "0.0.0.0",
-    modules: "app",
     engine: "",
     driver: "",
-    driverConfig: {}
+    driverConfig: {},
+    modules: {
+        root: "app",
+        controllerPattern: "\/controller.js$",
+        modelPattern: "\/model.js$",
+        ignored: []
+    },
 }
 
 module.exports = (engine, driver) => {

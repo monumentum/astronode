@@ -11,8 +11,8 @@ exports.getEngine = ({ engine, engineConfig }) => getInstance(ENGINES, engine, e
 
 exports.setupApp = (driver, config) => Promise.all([
     driver.start(),
-    registerModules(config),
-    registerMiddleware(config),
+    config.modules ? registerModules(config) : Promise.resolve(),
+    config.middlewares ? registerMiddleware(config) : Promise.resolve(),
 ]);
 
 exports.mountApp = (normalizedConfig, normalizedRoute)  => {

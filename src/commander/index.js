@@ -3,9 +3,6 @@ const version = require('../../package.json').version;
 
 const setupCallback = require('./setup');
 
-const CONFIG_FILE = 'astronode.config.json';
-const ROUTE_FILE = 'astronode.route.json';
-
 module.exports = runCallback => {
     program.version(version);
 
@@ -16,8 +13,8 @@ module.exports = runCallback => {
             .action(setupCallback)
 
     program.command('run')
-            .option('-C, --configFile <config_file>', 'Select configs file', CONFIG_FILE)
-            .option('-R, --routeFile <route_file>', 'Select routes file', ROUTE_FILE)
+            .option('--configFile', 'Select configs file')
+            .option('--routeFile', 'Select routes file')
             .action(runCallback)
 
     program.parse(process.argv);

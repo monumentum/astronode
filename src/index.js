@@ -2,6 +2,9 @@ const { omit } = require('lodash');
 const { mountApp } = require('./adapter');
 const { normalizeProcessVariables } = require('./util');
 
+const CONFIG_FILE = 'astronode.config.json';
+const ROUTE_FILE = 'astronode.routes.json';
+
 global.astronode = {
     ROOT_PATH: process.cwd(),
     middlewares: {},
@@ -11,7 +14,15 @@ global.astronode = {
 };
 
 exports.runServerFunction = adapter => {
-    require(astronode.MODULES_PATH).server(adapter.app);
+    let server;
+
+    try {
+        require.resolve(astronode.MODULES_PATH);
+        require(astronode.MODULES_PATH).server(adapter.app);
+    } catch (e) {
+        // TODO
+    }
+
     return adapter;
 };
 
@@ -20,7 +31,7 @@ exports.initServer = adapter => {
 };
 
 
-exports.runAstronode = ({ configFile, routeFile }) => {
+exports.runAstronode = ({ configFile = CONFIG_FILE, routeFile = ROUTE_FILE }) => {
     configFile = `${astronode.ROOT_PATH}/${configFile}`;
     routeFile = `${astronode.ROOT_PATH}/${routeFile}`;
 
@@ -37,8 +48,8 @@ exports.runAstronode = ({ configFile, routeFile }) => {
 };
 
 if (module === require.main) {
-    require('./commander')(() => {
-        exports.runAstronode(program)
+    require('./commander')(cmd => {
+        exports.runAstronode(cmd)
             .then(exports.runServerFunction)
             .then(exports.initServer);
     });
