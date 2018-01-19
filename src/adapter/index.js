@@ -27,3 +27,8 @@ exports.mountApp = (normalizedConfig, normalizedRoute)  => {
             return engineAdapter;
         });
 };
+
+exports.dependenciesMap = {
+    express: ['express', 'body-parser'],
+    mongoose: ['mongoose']
+}

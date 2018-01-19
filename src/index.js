@@ -2,9 +2,6 @@ const { omit } = require('lodash');
 const { mountApp } = require('./adapter');
 const { normalizeProcessVariables } = require('./util');
 
-const CONFIG_FILE = 'astronode.config.json';
-const ROUTE_FILE = 'astronode.route.json';
-
 global.astronode = {
     ROOT_PATH: process.cwd(),
     middlewares: {},
@@ -40,15 +37,9 @@ exports.runAstronode = ({ configFile, routeFile }) => {
 };
 
 if (module === require.main) {
-    const program = require('commander');
-
-    program
-        .version('0.1.0')
-        .option('-C, --configFile <config_file>', 'Select configs file', CONFIG_FILE)
-        .option('-R, --routeFile <route_file>', 'Select routes file', ROUTE_FILE)
-        .parse(process.argv);
-
-    exports.runAstronode(program)
-        .then(exports.runServerFunction)
-        .then(exports.initServer);
+    require('./commander')(() => {
+        exports.runAstronode(program)
+            .then(exports.runServerFunction)
+            .then(exports.initServer);
+    });
 }

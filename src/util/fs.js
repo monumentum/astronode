@@ -27,3 +27,10 @@ exports.recursiveDir = (path, opts = {}) =>
 
         return exports.recursiveDir(`${path}/${file}`, opts);
     }).then(compact).then(flattenDeep);
+
+exports.writeFile = (name, file) => new Promise((resolve, reject) => {
+    fs.writeFile(name, file, (err) => {
+        if (err) return reject(err);
+        return resolve();
+    });
+});
