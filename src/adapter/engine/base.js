@@ -1,4 +1,5 @@
 const { get, each } = require('lodash');
+const { setupPluginByName } = require('../../util');
 
 const DEFAULT_ROUTES = {
     '/': {
@@ -10,6 +11,22 @@ const DEFAULT_ROUTES = {
         'put': 'update',
         'delete': 'delete'
     }
+};
+
+const reduceChain = middleware => (a, c) => {
+    console.log("ALLOOO");
+    if (typeof a !== "function") middleware = middleware.call(a);
+    return middleware.call(c)
+};
+
+const parseMiddleware = ({ name, chain }) => {
+    let middleware = astronode.middlewares[name];
+
+    chain.forEach(parameters => {
+        middleware = middleware.apply(null, parameters);
+    });
+
+    return middleware;
 };
 
 class EngineAdapter {
@@ -28,7 +45,7 @@ class EngineAdapter {
             const routeMiddlewareNames = get(config, 'middlewareAll', []);
 
             const allMiddlewares = routeMiddlewareNames.concat(pathMiddlewaresNames)
-                                    .map(name => astronode.middlewares[name]);
+                                        .map(m => parseMiddleware(setupPluginByName(m)));
 
             const promise = get(astronode.controllers, serviceName, services && services[serviceName]);
 
