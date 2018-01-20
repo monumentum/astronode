@@ -24,8 +24,11 @@ class EngineAdapter {
         const services = config.model ? this._service(config.model) : {};
 
         each(endpoints, (serviceName, method) => {
-            const pathMiddle = get(config.middlewares, `${innerPath}.${method}`, [])
-                .map(name => astronode.middlewares[name]);
+            const pathMiddlewaresNames = get(config.middlewares, `${innerPath}.${method}`, []);
+            const routeMiddlewareNames = get(config, 'middlewareAll', []);
+
+            const allMiddlewares = routeMiddlewareNames.concat(pathMiddlewaresNames)
+                                    .map(name => astronode.middlewares[name]);
 
             const promise = get(astronode.controllers, serviceName, services && services[serviceName]);
 
@@ -35,7 +38,7 @@ class EngineAdapter {
 
             this.createRoute(
                 path + innerPath,
-                method, pathMiddle,
+                method, allMiddlewares,
                 EngineAdapter.promisedResponse(promise)
             );
         });
