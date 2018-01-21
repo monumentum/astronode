@@ -1,4 +1,4 @@
-module.exports = name => {
+exports.getName = name => {
     let closureChain = name.split(":");
     const config = { name: closureChain[0] };
 
@@ -10,4 +10,12 @@ module.exports = name => {
     }
 
     return config;
+}
+
+exports.invokeFunction = (fn, chain) => {
+    chain.forEach(parameters => {
+        fn = fn.apply(null, parameters);
+    });
+
+    return fn;
 }

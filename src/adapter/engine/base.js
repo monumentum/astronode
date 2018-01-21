@@ -1,5 +1,5 @@
 const { get, each } = require('lodash');
-const { setupPluginByName } = require('../../util');
+const { setupPlugin } = require('../../util');
 
 const DEFAULT_ROUTES = {
     '/': {
@@ -13,21 +13,12 @@ const DEFAULT_ROUTES = {
     }
 };
 
-const reduceChain = middleware => (a, c) => {
-    console.log("ALLOOO");
-    if (typeof a !== "function") middleware = middleware.call(a);
-    return middleware.call(c)
-};
+const parseMiddleware = name => {
+    const config = setupPlugin.getName(name);
+    const middle = astronode.middlewares[config.name];
 
-const parseMiddleware = ({ name, chain }) => {
-    let middleware = astronode.middlewares[name];
-
-    chain.forEach(parameters => {
-        middleware = middleware.apply(null, parameters);
-    });
-
-    return middleware;
-};
+    return setupPlugin.invokeFunction(middle, config.chain);
+}
 
 class EngineAdapter {
     static promisedResponse(promise) {
@@ -44,13 +35,17 @@ class EngineAdapter {
             const pathMiddlewaresNames = get(config.middlewares, `${innerPath}.${method}`, []);
             const routeMiddlewareNames = get(config, 'middlewareAll', []);
 
-            const allMiddlewares = routeMiddlewareNames.concat(pathMiddlewaresNames)
-                                        .map(m => parseMiddleware(setupPluginByName(m)));
+            const allMiddlewares = routeMiddlewareNames.concat(pathMiddlewaresNames).map(parseMiddleware);
 
-            const promise = get(astronode.controllers, serviceName, services && services[serviceName]);
+            const cbConfig = setupPlugin.getName(serviceName);
+            let promise = get(astronode.controllers, cbConfig.name, services && services[cbConfig.name]);
 
             if (!promise) {
                 throw new Error('@TODO NotAllowedService', serviceName);
+            }
+
+            if (cbConfig.chain) {
+                promise = setupPlugin.invokeFunction(promise, cbConfig.chain);
             }
 
             this.createRoute(
