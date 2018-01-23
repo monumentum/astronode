@@ -1,34 +1,32 @@
 const Promise = require('bluebird');
-const { registerModules, registerMiddleware } = require('../register');
+const { has } = require('lodash');
 
-const ENGINES = require('./engine');
-const DRIVERS = require('./driver');
+const {
+    registerModules,
+    registerMiddleware,
+    registerPlugins,
+} = require('../register');
 
-const getInstance = (mapper, name, config) => new mapper[name](config);
+const checkAndRun = (config, path, promise, isError) => {
+    if (!has(config, path) && isError) {
+        return Promise.reject('@TODO: Export astronode-plugin <MissingParameter> and alert about', path);
+    } else if (!has(config, path)) {
+        return Promise.resolve(null);
+    }
 
-exports.getDriver = ({ driver, driverConfig }) => getInstance(DRIVERS, driver, driverConfig);
-exports.getEngine = ({ engine, engineConfig }) => getInstance(ENGINES, engine, engineConfig);
+    return promise(config);
+}
 
-exports.setupApp = (driver, config) => Promise.all([
-    driver.start(),
-    config.modules ? registerModules(config) : Promise.resolve(),
-    config.middlewares ? registerMiddleware(config) : Promise.resolve(),
+exports.setupApp = config => Promise.all([
+    checkAndRun(config, 'application.modules', registerModules, true),
+    checkAndRun(config, 'application.middlewares', registerMiddleware),
+    checkAndRun(config, 'plugins', registerPlugins),
 ]);
 
-exports.mountApp = (normalizedConfig, normalizedRoute)  => {
-    const driverAdapter = exports.getDriver(normalizedConfig);
-    const engineAdapter = exports.getEngine(normalizedConfig);
+exports.mountApp = (normalizedConfig, normalizedRoutes) =>
+    exports.setupApp(normalizedConfig).then(() => {
+        const engine = astronode.plugins[normalizedConfig.engine];
+        engine.setRoutes(normalizedRoutes);
 
-    return exports.setupApp(driverAdapter, normalizedConfig)
-        .then(() => {
-            engineAdapter.setServices(driverAdapter.services);
-            engineAdapter.setRoutes(normalizedRoute);
-
-            return engineAdapter;
-        });
-};
-
-exports.dependenciesMap = {
-    express: ['express', 'body-parser'],
-    mongoose: ['mongoose']
-}
+        return engine;
+    });

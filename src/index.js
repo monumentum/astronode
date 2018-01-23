@@ -9,6 +9,7 @@ global.astronode = {
     ROOT_PATH: process.cwd(),
     middlewares: {},
     controllers: {},
+    plugins: {},
     models: {},
     config: {}
 };
@@ -41,7 +42,7 @@ exports.runAstronode = ({ configFile = CONFIG_FILE, routeFile = ROUTE_FILE }) =>
     const normalizedConfig = normalizeProcessVariables(configs);
     const normalizedRoute = normalizeProcessVariables(route);
 
-    astronode.MODULES_PATH = `${astronode.ROOT_PATH}/${normalizedConfig.modules.root}`;
+    astronode.MODULES_PATH = `${astronode.ROOT_PATH}/${normalizedConfig.application.modules}`;
     astronode.config = omit(normalizedConfig, 'database', 'modules', 'middleware');
 
     return mountApp(normalizedConfig, normalizedRoute);

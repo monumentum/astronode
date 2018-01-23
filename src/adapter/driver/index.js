@@ -1,1 +1,0 @@
-exports.mongoose = require('./mongoose');

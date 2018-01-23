@@ -1,82 +1,86 @@
 jest.mock('../../src/register');
-jest.mock('../../src/adapter/driver');
-jest.mock('../../src/adapter/engine');
 
 const Promise = require('bluebird');
-const register = require.requireMock('../../src/register');
+const adapter = require('../../src/adapter');
 
-class TestDriverAdapter {
+const {
+    registerModules,
+    registerMiddleware,
+    registerPlugins,
+} = require.requireMock('../../src/register');
+
+const setRouteSpec = jest.fn();
+class TestAdapter {
     constructor() {
-        this.isDriver = true;
+        this.isEngineTest = true;
     }
-}
 
-class TestEngineAdapter {
-    constructor() {
-        this.isEngine = true;
+    setRoutes(args) {
+        return setRouteSpec(args);
     }
 }
 
 describe('src/adapter/index', () => {
-    let adapter;
-    const driverFake = {
-        start: jest.fn().mockReturnValue(Promise.resolve())
-    }
-
-    const engineFake = {
-        __IS_FAKE__: true,
-        setServices: jest.fn(),
-        setRoutes: jest.fn()
-    }
-
     beforeEach(() => {
-        adapter = require('../../src/adapter');
+        registerModules.mockReturnValue(Promise.resolve());
+        registerPlugins.mockReturnValue(Promise.resolve());
+        registerMiddleware.mockReturnValue(Promise.resolve());
     });
 
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    describe('#getInstance', () => {
-        const adapterName = 'testAdapter';
-        const driverMock = require.requireMock('../../src/adapter/driver');
-        const engineMock = require.requireMock('../../src/adapter/engine');
+    it('should setupApp with all registers', () => {
+        const fakeConfig = {
+            plugins: [],
+            application: {
+                modules: {},
+                middlewares: {},
+            }
+        };
 
-        driverMock[adapterName] = TestDriverAdapter;
-        engineMock[adapterName] = TestEngineAdapter;
-
-        it('should call #getDriver correctly', () => {
-            const driver = adapter.getDriver({ driver: adapterName });
-            expect(driver).toHaveProperty('isDriver');
-            expect(driver).not.toHaveProperty('isEngine');
-        });
-
-        it('should call #getEngine correctly', () => {
-            const engine = adapter.getEngine({ engine: adapterName });
-            expect(engine).not.toHaveProperty('isDriver');
-            expect(engine).toHaveProperty('isEngine');
+        return adapter.setupApp(fakeConfig).then(() => {
+            expect(registerModules).toHaveBeenCalledWith(fakeConfig);
+            expect(registerPlugins).toHaveBeenCalledWith(fakeConfig);
+            expect(registerMiddleware).toHaveBeenCalledWith(fakeConfig);
         });
     });
 
-    describe('#mountApp', () => {
-        beforeEach(() => {
-            adapter.getDriver = jest.fn().mockReturnValue(driverFake);
-            adapter.getEngine = jest.fn().mockReturnValue(engineFake);
-            adapter.setupApp = jest.fn().mockReturnValue(Promise.resolve());
+    it('should setupApp without middlewares without non-required registers', () => {
+        const fakeConfig = {
+            application: {
+                modules: {},
+            }
+        };
+
+        return adapter.setupApp(fakeConfig).then(() => {
+            expect(registerModules).toHaveBeenCalledWith(fakeConfig);
+            expect(registerPlugins).not.toHaveBeenCalledWith(fakeConfig);
+            expect(registerMiddleware).not.toHaveBeenCalledWith(fakeConfig);
         });
+    });
 
-        it('should exec #mountApp correctly', () => {
-            const config = 'FAKE_CONFIG';
-            const routes = 'FAKE_ROUTES';
+    it('should setupApp without middlewares without required registers', () => {
+        const fakeConfig = {};
 
-            return adapter.mountApp(config, routes).then(app => {
-                expect(adapter.getDriver).toHaveBeenCalledWith(config);
-                expect(adapter.getEngine).toHaveBeenCalledWith(config);
-                expect(adapter.setupApp).toHaveBeenCalledWith(driverFake, config);
-                expect(app.setServices).toHaveBeenCalledWith(driverFake.services);
-                expect(app.setRoutes).toHaveBeenCalledWith(routes);
-                expect(app).toHaveProperty('__IS_FAKE__', true);
-            });
+        return adapter.setupApp(fakeConfig).catch(error => {
+            expect(registerModules).not.toHaveBeenCalledWith(fakeConfig);
+            expect(registerPlugins).not.toHaveBeenCalledWith(fakeConfig);
+            expect(registerMiddleware).not.toHaveBeenCalledWith(fakeConfig);
+        });
+    });
+
+    it('should mountApp correctly', () => {
+        const config = { engine: 'TEST_ENGINE' };
+        const route = 'TEST_ROUTE';
+
+        global.astronode = { plugins: { [config.engine]: new TestAdapter() } }
+        adapter.setupApp = jest.fn().mockReturnValue(Promise.resolve());
+
+        return adapter.mountApp(config, route).then(engine => {
+            expect(setRouteSpec).toHaveBeenCalledWith(route);
+            expect(engine).toHaveProperty('isEngineTest');
         });
     });
 });
