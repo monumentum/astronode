@@ -1,5 +1,5 @@
 
-# Astronaut JS
+# Astronode
 [![Build Status](https://travis-ci.org/monumentum/astronaut.js.svg?branch=master)](https://travis-ci.org/monumentum/astronaut.js) [![Coverage Status](https://coveralls.io/repos/github/monumentum/astronaut.js/badge.svg?branch=master)](https://coveralls.io/github/monumentum/astronaut.js?branch=master) [![bitHound Code](https://www.bithound.io/github/monumentum/astronaut.js/badges/code.svg)](https://www.bithound.io/github/monumentum/astronaut.js) [![bitHound Overall Score](https://www.bithound.io/github/monumentum/astronaut.js/badges/score.svg)](https://www.bithound.io/github/monumentum/astronaut.js) [![bitHound Dependencies](https://www.bithound.io/github/monumentum/astronaut.js/badges/dependencies.svg)](https://www.bithound.io/github/monumentum/astronaut.js/master/dependencies/npm) [![bitHound Dev Dependencies](https://www.bithound.io/github/monumentum/astronaut.js/badges/devDependencies.svg)](https://www.bithound.io/github/monumentum/astronaut.js/master/dependencies/npm)  
 
 # Get started

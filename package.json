@@ -1,7 +1,7 @@
 {
   "name": "astronode",
-  "version": "0.0.1",
-  "description": "From mongo to the world",
+  "version": "0.0.3",
+  "description": "Plugin layer to create automatizated and configuration based apis",
   "main": "src/index.js",
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -11,12 +11,9 @@
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
-    "body-parser": "^1.18.2",
     "coveralls": "^3.0.0",
     "eslint": "^4.7.0",
-    "express": "^4.16.2",
-    "jest": "^21.2.1",
-    "mongoose": "^4.13.9"
+    "jest": "^21.2.1"
   },
   "scripts": {
     "test": "jest --config config.jest.json --coverage",
