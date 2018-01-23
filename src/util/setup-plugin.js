@@ -1,8 +1,8 @@
 exports.getName = name => {
-    let closureChain = name.split(":");
+    let closureChain = name.split(':');
     const config = { name: closureChain[0] };
 
-    closureChain = closureChain.map(c => c.split(","));
+    closureChain = closureChain.map(c => c.split(','));
     closureChain.shift();
 
     if (closureChain.length > 0) {
@@ -10,7 +10,7 @@ exports.getName = name => {
     }
 
     return config;
-}
+};
 
 exports.invokeFunction = (fn, chain) => {
     chain.forEach(parameters => {
@@ -18,4 +18,4 @@ exports.invokeFunction = (fn, chain) => {
     });
 
     return fn;
-}
+};

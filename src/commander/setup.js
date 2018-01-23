@@ -4,17 +4,17 @@ const { fs } = require('../util');
 
 const astronautConfig = {
     port: 3000,
-    host: "0.0.0.0",
-    engine: "",
-    driver: "",
+    host: '0.0.0.0',
+    engine: '',
+    driver: '',
     driverConfig: {},
     modules: {
-        root: "app",
-        controllerPattern: "\/controller.js$",
-        modelPattern: "\/model.js$",
+        root: 'app',
+        controllerPattern: '/controller.js$',
+        modelPattern: '/model.js$',
         ignored: []
     },
-}
+};
 
 module.exports = (engine, driver) => {
     astronautConfig.engine = engine;
@@ -24,10 +24,10 @@ module.exports = (engine, driver) => {
     const configFile = `${astronode.ROOT_PATH}/astronode.config.json`;
     const configJson = JSON.stringify(astronautConfig, null, 4);
 
-    exec(`npm install --save ${deeps.join(" ")}`, err => {
+    exec(`npm install --save ${deeps.join(' ')}`, err => {
         if (err) throw err;
 
         fs.writeFile(configFile, configJson)
-            .then(() => process.exit(0))
+            .then(() => process.exit(0));
     });
-}
+};

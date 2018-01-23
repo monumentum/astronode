@@ -1,5 +1,4 @@
 const Promise = require('bluebird');
-const { each } = require('lodash');
 
 module.exports = ({ plugins }) => Promise.map(plugins, (plugin) => {
     let holder = Promise.resolve();

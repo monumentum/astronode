@@ -15,7 +15,7 @@ const checkAndRun = (config, path, promise, isError) => {
     }
 
     return promise(config);
-}
+};
 
 exports.setupApp = config => Promise.all([
     checkAndRun(config, 'application.modules', registerModules, true),

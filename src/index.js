@@ -15,8 +15,6 @@ global.astronode = {
 };
 
 exports.runServerFunction = adapter => {
-    let server;
-
     try {
         require.resolve(astronode.MODULES_PATH);
         require(astronode.MODULES_PATH).server(adapter.app);

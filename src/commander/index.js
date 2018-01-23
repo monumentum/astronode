@@ -8,14 +8,14 @@ module.exports = runCallback => {
 
     program
         .command('setup')
-            .option('--engine', 'the engine adapter that you want')
-            .option('--driver', 'the driver adapter that you want')
-            .action(setupCallback)
+        .option('--engine', 'the engine adapter that you want')
+        .option('--driver', 'the driver adapter that you want')
+        .action(setupCallback);
 
     program.command('run')
-            .option('--configFile', 'Select configs file')
-            .option('--routeFile', 'Select routes file')
-            .action(runCallback)
+        .option('--configFile', 'Select configs file')
+        .option('--routeFile', 'Select routes file')
+        .action(runCallback);
 
     program.parse(process.argv);
-}
+};
