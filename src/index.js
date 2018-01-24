@@ -45,11 +45,3 @@ exports.runAstronode = ({ configFile = CONFIG_FILE, routeFile = ROUTE_FILE }) =>
 
     return mountApp(normalizedConfig, normalizedRoute);
 };
-
-if (module === require.main) {
-    require('./commander')(cmd => {
-        exports.runAstronode(cmd)
-            .then(exports.runServerFunction)
-            .then(exports.initServer);
-    });
-}

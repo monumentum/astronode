@@ -26,6 +26,9 @@
     "type": "git",
     "url": "git+https://github.com/monumentum/astronode.git"
   },
+  "bin": {
+    "astronode": "./src/commander/index.js"
+  },
   "keywords": [
     "mongo",
     "mongoose",
