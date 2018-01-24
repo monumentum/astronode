@@ -4,9 +4,9 @@
   "description": "Plugin layer to create automatizated and configuration based apis",
   "main": "src/index.js",
   "dependencies": {
+    "astronode-utils": "^0.1.0",
     "bluebird": "^3.5.1",
     "commander": "^2.12.2",
-    "jest-plugin-fs": "^2.5.0",
     "winston": "^2.3.1"
   },
   "devDependencies": {
