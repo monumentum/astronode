@@ -1,6 +1,6 @@
 const Promise = require('bluebird');
 const { has } = require('lodash');
-const { MissingParameter } = require('astronode-utils/lib/error')
+const { MissingParameter } = require('astronode-utils/lib/error');
 
 const {
     registerModules,
