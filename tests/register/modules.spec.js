@@ -33,7 +33,10 @@ describe('Register Modules', () => {
         ]);
 
         fs.recursiveDir.mockReturnValue(promiseWithFiles)
-        getModuleName.mockReturnValue(fakeModule);
+        getModuleName
+            .mockReturnValueOnce(fakeModule)
+            .mockReturnValueOnce(fakeModule)
+            .mockReturnValueOnce(null);
     });
 
     it('should exec module register correctly', () => {
