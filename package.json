@@ -1,6 +1,6 @@
 {
   "name": "astronode",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Plugin layer to create automatizated and configuration based apis",
   "main": "src/index.js",
   "dependencies": {
