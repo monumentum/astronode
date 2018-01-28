@@ -1,6 +1,3 @@
-const main = require('../');
+const { runAstronode } = require('../');
 
-module.exports = cmd =>
-    main.runAstronode(cmd)
-        .then(main.runServerFunction)
-        .then(main.initServer);
+module.exports = cmd => runAstronode(cmd);

@@ -1,8 +1,7 @@
-const Promise = require('bluebird');
+const { zipObject, map } = require('lodash');
 const { WrongType } = require('astronode-utils/lib/error');
 
-module.exports = ({ plugins }) => Promise.each(plugins, (plugin) => {
-    let holder = Promise.resolve();
+const getPluginInstance = plugin => {
     let pluginInstance = null;
     const plugRef = require(plugin.module);
 
@@ -17,10 +16,10 @@ module.exports = ({ plugins }) => Promise.each(plugins, (plugin) => {
     }
 
     if (pluginInstance.autoinitialize) {
-        holder = pluginInstance.autoinitialize();
+        pluginInstance.autoinitialize();
     }
 
-    return holder.then(() => {
-        astronode.plugins[plugin.name] = pluginInstance;
-    });
-});
+    return pluginInstance;
+}
+module.exports = (plugins) =>
+    zipObject(map(plugins, 'name'), map(plugins, getPluginInstance));
