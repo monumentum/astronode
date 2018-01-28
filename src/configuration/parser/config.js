@@ -11,4 +11,4 @@ const normalize = value => {
 const normalizeArray = values => map(values, normalize);
 const normalizeObject = values => mapValues(values, normalize);
 
-module.exports = (configs) => normalizeObject(configs)
+module.exports = (configs) => normalizeObject(configs);

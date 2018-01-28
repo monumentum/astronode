@@ -20,6 +20,6 @@ const getPluginInstance = plugin => {
     }
 
     return pluginInstance;
-}
+};
 module.exports = (plugins) =>
     zipObject(map(plugins, 'name'), map(plugins, getPluginInstance));

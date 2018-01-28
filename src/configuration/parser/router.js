@@ -91,15 +91,13 @@ module.exports = (routes, config) => mapValues(routes, route => {
     }
 
     if (defaultApiModel) {
-        middlewares = createDefaultMiddlewares(defaultApiModel.middlewares);
+        const middlewares = createDefaultMiddlewares(defaultApiModel.middlewares);
         subroutes = createDefaultRoutes(config.opts.data, defaultApiModel, middlewares);
     }
 
-    const x = merge(
+    return merge(
         normalizeRoutes(subroutes, config),
         normalizeRoutes(route.routes, config),
         authroutes
     );
-
-    return x;
 });

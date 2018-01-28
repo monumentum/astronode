@@ -1,6 +1,4 @@
 const Promise = require('bluebird');
-const { has } = require('lodash');
-
 const getConfig = require('./configuration');
 
 const CONFIG_FILE = 'astronode.config.json';
@@ -10,7 +8,7 @@ exports.initServer = adapter => {
     return adapter.start();
 };
 
-exports.mountApp = (configFile, routerFile, customFns) =>
+exports.mountApp = (configFile, routerFile) =>
     getConfig(configFile, routerFile).then(config => {
         const engine = config.plugins[config.opts.engine];
         engine.setRoutes(config.routes);
@@ -19,6 +17,6 @@ exports.mountApp = (configFile, routerFile, customFns) =>
     });
 
 exports.runAstronode = ({ configFile = CONFIG_FILE, routeFile = ROUTE_FILE }) => {
-     return exports.mountApp(configFile, routeFile)
-                .then(exports.initServer);
+    return exports.mountApp(configFile, routeFile)
+        .then(exports.initServer);
 };

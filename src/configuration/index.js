@@ -13,32 +13,32 @@ const getConfig = (configFile, routerFile) => {
     starMap
         .parsex(configFile, {
             star: 'opts',
-            parser: require('./parser/config')
+            strategy: require('./parser/config')
         })
-        .parsex('> config.application.middlewares', {
+        .parsex('> application.middlewares', {
             wait: [ 'config' ],
             star: 'middlewares',
-            parser: require
+            strategy: require
         })
-        .parsex('> config.application.modules', {
+        .parsex('> application.modules', {
             wait: [ 'config' ],
             constelation: [
-                { star: 'models', pattern: '> config.application.modelPattern' },
-                { star: 'controllers', pattern: '> config.application.controllerPattern' },
+                { star: 'models', strategy: require, skip: '> application.modelPattern' },
+                { star: 'controllers', strategy: require, skip: '> application.controllerPattern' },
             ]
         })
-        .parsex('> config.plugins', {
+        .parsex('> plugins', {
             wait: [ 'config' ],
             star: 'plugins',
-            parser: require('./parser/plugins')
+            strategy: require('./parser/plugins')
         })
         .parsex(routerFile, {
             wait: [ 'modules', 'middlewares', 'plugins' ],
             star: 'routes',
-            parser: require('./parser/router')
-        })
+            strategy: require('./parser/router')
+        });
 
     return starMap.bigbang();
-}
+};
 
 module.exports = getConfig;
