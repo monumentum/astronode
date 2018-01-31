@@ -11,6 +11,18 @@ describe('src.index', () => {
         jest.clearAllMocks();
     })
 
+    it('should exec runPlugins correctly', () => {
+        const plugin = 'test';
+        const plugins = { [plugin]: { autoinitialize: jest.fn() }};
+        const something = 'something';
+        const fakeConfig = { plugins, something };
+
+        return main.runPlugins(fakeConfig).then(config => {
+            expect(plugins[plugin].autoinitialize).toHaveBeenCalledWith(fakeConfig);
+            expect(config).toEqual(fakeConfig);
+        });
+    });
+
     it('should exec mountApp correctly', () => {
         const engineProp = 'TEST';
 
@@ -25,27 +37,23 @@ describe('src.index', () => {
             opts: { engine: engineProp }
         };
 
+        main.runPlugins = jest.fn().mockReturnValue(Promise.resolve(fakeReponseConfig));
         getConfig.mockReturnValue(Promise.resolve(fakeReponseConfig));
 
         return main.mountApp(fakeConfig, fakeRoute).then(engine => {
             expect(getConfig).toHaveBeenCalledWith(fakeConfig, fakeRoute);
             expect(engine).toHaveProperty('_testEngine');
             expect(engine.setRoutes).toHaveBeenCalledWith(fakeReponseConfig.routes);
+            expect(main.runPlugins).toHaveBeenCalledTimes(1);
         });
-    });
-
-    it('should exec runServerFunction correctly', () => {
-        const fakeAdapter = { start: jest.fn() };
-
-        main.initServer(fakeAdapter);
-        expect(fakeAdapter.start).toHaveBeenCalledWith();
     });
 
     it('should exec initServer correctly', () => {
         const fakeAdapter = { start: jest.fn() };
+        const fakeConfig = 'FAKE_CONFIG';
 
-        main.initServer(fakeAdapter);
-        expect(fakeAdapter.start).toHaveBeenCalledWith();
+        main.initServer(fakeAdapter, fakeConfig);
+        expect(fakeAdapter.start).toHaveBeenCalledWith(fakeConfig);
     });
 
     it('should exec runAstronode correctly', () => {

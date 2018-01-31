@@ -41,7 +41,7 @@ describe('Configuration > Parse Plugins', () => {
         expect(fnPlugin()).toBe(originalFn());
         expect(fnConfigPlugin).toBe(originalFn(fakeFnPluginConfig));
         expect(classPlugin).toHaveProperty('isPluginClass');
-        expect(classPlugin._autoinitialize).toHaveBeenCalledTimes(1);
+        expect(classPlugin._autoinitialize).toHaveBeenCalledTimes(0);
     });
 
     it('should throw an error during parser', () => {

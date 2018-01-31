@@ -15,20 +15,20 @@ const getConfig = (configFile, routerFile) => {
             star: 'opts',
             strategy: require('./parser/config')
         })
-        .parsex('> application.middlewares', {
-            wait: [ 'config' ],
+        .parsex('> opts.application.middlewares', {
+            wait: [ 'opts' ],
             star: 'middlewares',
             strategy: require
         })
-        .parsex('> application.modules', {
-            wait: [ 'config' ],
+        .parsex('> opts.application.modules', {
+            wait: [ 'opts' ],
             constelation: [
-                { star: 'models', strategy: require, skip: '> application.modelPattern' },
-                { star: 'controllers', strategy: require, skip: '> application.controllerPattern' },
+                { star: 'models', strategy: require, skip: '> opts.application.controllerPattern' },
+                { star: 'controllers', strategy: require, skip: '> opts.application.modelPattern' },
             ]
         })
-        .parsex('> plugins', {
-            wait: [ 'config' ],
+        .parsex('> opts.plugins', {
+            wait: [ 'opts' ],
             star: 'plugins',
             strategy: require('./parser/plugins')
         })

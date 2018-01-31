@@ -1,5 +1,7 @@
 {
-    "application": {
-        "modules": "TEST_ROOT"
-    }
+    "object": {
+        "string": "$var1",
+        "array": [ "$var2" ]
+    },
+    "array": [ "$var3", { "obj": "$var4"} ]
 }

@@ -7,15 +7,7 @@ describe('Configuration > Parse Config File', () => {
         process.env.var3 = 'test3';
         process.env.var4 = 'test4';
 
-        const testConfig = {
-            'object': {
-                'string': '$var1',
-                'array': [ '$var2' ],
-            },
-            'array': [ '$var3', { 'obj': '$var4'} ],
-        }
-
-        const parsedConfig = parseConfig(testConfig);
+        const parsedConfig = parseConfig(`${process.cwd()}/tests/__mocks__/config.mock.json`);
 
         expect(parsedConfig.object).toHaveProperty('string', process.env.var1);
         expect(parsedConfig.object).toHaveProperty('array', [process.env.var2]);

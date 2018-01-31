@@ -15,11 +15,8 @@ const getPluginInstance = plugin => {
         pluginInstance = plugin.config ? plugRef(plugin.config) : plugRef;
     }
 
-    if (pluginInstance.autoinitialize) {
-        pluginInstance.autoinitialize();
-    }
-
     return pluginInstance;
 };
+
 module.exports = (plugins) =>
     zipObject(map(plugins, 'name'), map(plugins, getPluginInstance));
