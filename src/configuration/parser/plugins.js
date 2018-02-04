@@ -1,4 +1,6 @@
-const { zipObject, map } = require('lodash');
+const Promise = require('bluebird');
+
+const { zipObject, map, toPairs } = require('lodash');
 const { WrongType } = require('astronode-utils/lib/error');
 
 const getPluginInstance = plugin => {
@@ -18,5 +20,11 @@ const getPluginInstance = plugin => {
     return pluginInstance;
 };
 
-module.exports = (plugins) =>
+exports.configurePlugins = (plugins) =>
     zipObject(map(plugins, 'name'), map(plugins, getPluginInstance));
+
+exports.runPlugins = config => Promise.map(
+    toPairs(config.plugins),
+    ([, plugin]) => plugin.autoinitialize ? plugin.autoinitialize(config) : Promise.resolve(),
+    { concurrency: 20 }
+).then(() => config);

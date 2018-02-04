@@ -31,7 +31,7 @@ describe('Configuration > Parse Plugins', () => {
     ];
 
     it('should return correct plugins', () => {
-        const parsedPlugins = parsePlugins(fakePlugins);
+        const parsedPlugins = parsePlugins.configurePlugins(fakePlugins);
         const getPlugin = pluginGetter(parsedPlugins);
 
         const fnPlugin = getPlugin(fakeFnPlugin);
@@ -45,11 +45,23 @@ describe('Configuration > Parse Plugins', () => {
     });
 
     it('should throw an error during parser', () => {
-        const toThrowWrongType = () => parsePlugins([{
+        const toThrowWrongType = () => parsePlugins.configurePlugins([{
             name: fakeWrongPlugin,
             module: mockdir('plugins/fake-wrong')
         }]);
 
         expect(toThrowWrongType).toThrow(WrongType);
+    });
+
+    it('should exec runPlugins correctly', () => {
+        const plugin = 'test';
+        const plugins = { [plugin]: { autoinitialize: jest.fn() }};
+        const something = 'something';
+        const fakeConfig = { plugins, something };
+
+        return parsePlugins.runPlugins(fakeConfig).then(config => {
+            expect(plugins[plugin].autoinitialize).toHaveBeenCalledWith(fakeConfig);
+            expect(config).toEqual(fakeConfig);
+        });
     });
 });

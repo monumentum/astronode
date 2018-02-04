@@ -10,18 +10,6 @@ describe('src.index', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
-    })
-
-    it('should exec runPlugins correctly', () => {
-        const plugin = 'test';
-        const plugins = { [plugin]: { autoinitialize: jest.fn() }};
-        const something = 'something';
-        const fakeConfig = { plugins, something };
-
-        return main.runPlugins(fakeConfig).then(config => {
-            expect(plugins[plugin].autoinitialize).toHaveBeenCalledWith(fakeConfig);
-            expect(config).toEqual(fakeConfig);
-        });
     });
 
     it('should exec mountApp correctly', () => {
@@ -38,14 +26,12 @@ describe('src.index', () => {
             opts: { engine: engineProp }
         };
 
-        main.runPlugins = jest.fn().mockReturnValue(Promise.resolve(fakeReponseConfig));
         getConfig.mockReturnValue(Promise.resolve(fakeReponseConfig));
 
         return main.mountApp(fakeConfig, fakeRoute).spread(engine => {
             expect(getConfig).toHaveBeenCalledWith(fakeConfig, fakeRoute);
             expect(engine).toHaveProperty('_testEngine');
             expect(engine.setRoutes).toHaveBeenCalledWith(fakeReponseConfig.routes);
-            expect(main.runPlugins).toHaveBeenCalledTimes(1);
         });
     });
 
