@@ -1,10 +1,10 @@
 {
   "name": "astronode",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Plugin layer to create automatizated and configuration based apis",
   "main": "src/index.js",
   "dependencies": {
-    "astronode-utils": "^0.2.0",
+    "astronode-utils": "^0.3.0",
     "bluebird": "^3.5.1",
     "commander": "^2.12.2",
     "star-mapper": "^0.5.0"
