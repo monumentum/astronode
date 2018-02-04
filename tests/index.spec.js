@@ -1,5 +1,6 @@
 jest.mock('../src/configuration');
 
+const Promise = require('bluebird');
 const main = require('../src/index');
 const getConfig = require.requireMock('../src/configuration');
 
@@ -40,7 +41,7 @@ describe('src.index', () => {
         main.runPlugins = jest.fn().mockReturnValue(Promise.resolve(fakeReponseConfig));
         getConfig.mockReturnValue(Promise.resolve(fakeReponseConfig));
 
-        return main.mountApp(fakeConfig, fakeRoute).then(engine => {
+        return main.mountApp(fakeConfig, fakeRoute).spread(engine => {
             expect(getConfig).toHaveBeenCalledWith(fakeConfig, fakeRoute);
             expect(engine).toHaveProperty('_testEngine');
             expect(engine.setRoutes).toHaveBeenCalledWith(fakeReponseConfig.routes);
@@ -50,7 +51,6 @@ describe('src.index', () => {
 
     it('should exec initServer correctly', () => {
         const fakeAdapter = { start: jest.fn() };
-        const fakeConfig = 'FAKE_CONFIG';
 
         main.initServer(fakeAdapter, fakeConfig);
         expect(fakeAdapter.start).toHaveBeenCalledWith(fakeConfig);
@@ -58,7 +58,7 @@ describe('src.index', () => {
 
     it('should exec runAstronode correctly', () => {
         main.initServer = jest.fn().mockReturnValue(Promise.resolve());
-        main.mountApp = jest.fn().mockReturnValue(Promise.resolve());
+        main.mountApp = jest.fn().mockReturnValue(Promise.resolve([]));
 
         return main.runAstronode({
             configFile: fakeConfig,

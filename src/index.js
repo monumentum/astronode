@@ -21,9 +21,9 @@ exports.mountApp = (configFile, routerFile) =>
             const engine = config.plugins[config.opts.engine];
             engine.setRoutes(config.routes);
 
-            return Promise.resolve(engine, config.opts);
+            return Promise.resolve([engine, config.opts]);
         });
 
 exports.runAstronode = ({ configFile = CONFIG_FILE, routeFile = ROUTE_FILE }) =>
     exports.mountApp(configFile, routeFile)
-        .then(exports.initServer);
+        .spread(exports.initServer);
