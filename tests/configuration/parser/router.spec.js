@@ -12,41 +12,7 @@ const fakeGetMiddleware = {
     call: () => false
 };
 
-const routeConfig = {
-    '/default': {
-        defaultAPI: {
-            model: 'test',
-            middlewares: {
-                '/': {
-                    'get': [ fakeGetMiddleware.key ]
-                }
-            }
-        }
-    },
-    '/custom': {
-        routes: {
-            '/': {
-                'get': {
-                    'call': [ fakeGetController.key ],
-                    'middlewares': []
-                }
-            }
-        }
-    },
-    '/override': {
-        defaultAPI: {
-            model: 'test'
-        },
-        routes: {
-            '/': {
-                'get': {
-                    'call': [ fakeGetController.key ],
-                    'middlewares': [ fakeGetMiddleware.key ]
-                }
-            }
-        }
-    }
-};
+const routeConfig = `${process.cwd()}/tests/__mocks__/router.mock.json`;
 
 describe('Configuration > Parse Plugins', () => {
     it('should map routes correctly', () => {

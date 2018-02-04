@@ -1,0 +1,35 @@
+{
+    "/default": {
+        "defaultAPI": {
+            "model": "test",
+            "middlewares": {
+                "/": {
+                    "get": [ "fakeGetMiddleware" ]
+                }
+            }
+        }
+    },
+    "/custom": {
+        "routes": {
+            "/": {
+                "get": {
+                    "call": [ "fakeGetCtrl" ],
+                    "middlewares": []
+                }
+            }
+        }
+    },
+    "/override": {
+        "defaultAPI": {
+            "model": "test"
+        },
+        "routes": {
+            "/": {
+                "get": {
+                    "call": [ "fakeGetCtrl" ],
+                    "middlewares": [ "fakeGetMiddleware" ]
+                }
+            }
+        }
+    }
+}

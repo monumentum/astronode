@@ -75,7 +75,7 @@ const createAuthRoutes = (path, name) => ({
     }
 });
 
-module.exports = (routes, config) => mapValues(routes, route => {
+module.exports = (routes, config) => mapValues(require(routes), route => {
     let subroutes = {};
     let authroutes = {};
 
