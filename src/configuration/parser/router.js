@@ -9,7 +9,15 @@ const normalizeRoutes = (routes, config) => mapValues(routes, methods => mapValu
     } else if (isArray(method)) {
         normalizedRoutes.call = method;
     } else {
-        normalizedRoutes = method;
+        normalizedRoutes = merge(method, normalizedRoutes);
+    }
+
+    if (!isArray(normalizedRoutes.call)) {
+        normalizedRoutes.call = [ normalizedRoutes.call ]
+    }
+
+    if (!isArray(normalizedRoutes.middlewares)) {
+        normalizedRoutes.middlewares = [ normalizedRoutes.middlewares ]
     }
 
     normalizedRoutes.call = map(normalizedRoutes.call, c => interpreter(c, config, 'controllers'));
@@ -32,15 +40,15 @@ const createDefaultRoutes = (dataplugin, model, middlewares) => ({
     '/:id': {
         'get': {
             'call': [ `!${dataplugin}.methods.findById:${model}` ],
-            'middlewares': middlewares['/']['get']
+            'middlewares': middlewares['/:id']['get']
         },
         'put': {
             'call': [ `!${dataplugin}.methods.update:${model}` ],
-            'middlewares': middlewares['/']['put']
+            'middlewares': middlewares['/:id']['put']
         },
         'delete': {
             'call': [ `!${dataplugin}.methods.delete:${model}` ],
-            'middlewares': middlewares['/']['delete']
+            'middlewares': middlewares['/:id']['delete']
         },
     }
 });
@@ -57,47 +65,57 @@ const createDefaultMiddlewares = middlewares => merge({
     }
 }, middlewares);
 
-const createAuthRoutes = (path, name) => ({
-    [path]: {
-        '/': {
-            'post': `${name}.login`
+const createAuthRoutes = name => ({
+    '/': {
+        'post': `${name}.login`
+    },
+    '/:id': {
+        'delete': {
+            'call': [ `${name}.logout` ],
+            'middleware': `${name}:isMe`
         },
-        '/:id': {
-            'delete': {
-                'call': `${name}.logout`,
-                'middleware': `${name}:isMe`
-            },
-            'update': {
-                'call': `${name}.refresh`,
-                'middleware': `${name}:isMe`
-            }
+        'update': {
+            'call': [ `${name}.refresh` ],
+            'middleware': `${name}:isMe`
         }
     }
 });
 
-module.exports = (routes, config) => mapValues(require(routes), route => {
-    let subroutes = {};
-    let authroutes = {};
-
-    const defaultApiModel = get(route, 'defaultAPI.model');
+exports.configureSession = config => {
     const authentication = get(config, 'opts.authentication');
 
     if (authentication) {
-        const authCheck = interpreter(authentication.tokenActions.check, config, 'plugins');
-        const middleCreator = config.plugins[config.opts.engine].authMiddleware;
+        authentication.tokenActions = mapValues(authentication.tokenActions, (value) => interpreter(value, config, 'plugins'));
 
-        authroutes = createAuthRoutes(authentication);
-        config.middlewares[authentication.name] = middleCreator.bind(null, authCheck);
+        const wrapper = interpreter(authentication.middlewares, config, 'plugins');
+        const middleware = config.plugins[config.opts.engine].authenticationMiddleware(authentication.tokenActions.check);
+        const controller = config.plugins[config.opts.engine].authenticationController(authentication, config);
+
+        config.middlewares[authentication.name] = wrapper(middleware);
+        config.controllers[authentication.name] = controller;
+        const routes = createAuthRoutes(authentication.name, config);
+
+        if (!authentication.tokenActions.refresh) {
+            delete routes['/:id']['update'];
+        }
+
+        config.routes[authentication.api.uri] = normalizeRoutes(routes, config);
     }
 
+    return Promise.resolve(config);
+}
+
+exports.configureRoute = (routes, config) => mapValues(require(routes), route => {
+    const defaultApiModel = get(route, 'defaultAPI.model');
+    let subroutes = {};
+
     if (defaultApiModel) {
-        const middlewares = createDefaultMiddlewares(defaultApiModel.middlewares);
+        const middlewares = createDefaultMiddlewares(route.defaultAPI.middlewares);
         subroutes = createDefaultRoutes(config.opts.data, defaultApiModel, middlewares);
     }
 
     return merge(
         normalizeRoutes(subroutes, config),
-        normalizeRoutes(route.routes, config),
-        authroutes
+        normalizeRoutes(route.routes, config)
     );
 });

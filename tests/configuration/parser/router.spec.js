@@ -1,4 +1,4 @@
-const routerParser = require('../../../src/configuration/parser/router');
+const { configureSession, configureRoute } = require('../../../src/configuration/parser/router');
 const fakeDataEngine = require('../../__mocks__/engine/data');
 const { isEqual } = require('lodash');
 
@@ -34,13 +34,13 @@ describe('Configuration > Parse Plugins', () => {
             }
         }
 
-        const parsedRoutes = routerParser(routeConfig, fakeConfig);
+        const parsedRoutes = configureRoute(routeConfig, fakeConfig);
         const expected = {
             '/default': {
                 '/': {
                     'get': {
                         'call': [ fakeDataEngine.fakeReturn ],
-                        'middlewares': []
+                        'middlewares': [ fakeGetMiddleware.call ]
                     },
                     'post': {
                         'call': [ fakeDataEngine.fakeReturn ],

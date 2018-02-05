@@ -1,5 +1,6 @@
 const StarMap = require('star-mapper');
-const pluginParser = require('./parser/plugins');
+const { configurePlugins, runPlugins } = require('./parser/plugins');
+const { configureRoute, configureSession } = require('./parser/router')
 
 const starMap = new StarMap({
     rootPath: process.cwd(),
@@ -32,14 +33,15 @@ module.exports = (configFile, routerFile) => {
         .parsex('> opts.plugins', {
             wait: [ 'opts' ],
             star: 'plugins',
-            strategy: pluginParser.configurePlugins
+            strategy: configurePlugins
         })
-        .parallax(pluginParser.runPlugins)
+        .parallax(runPlugins)
+        .parallax(configureSession)
         .parsex(routerFile, {
             wait: [ 'modules', 'middlewares', 'plugins' ],
             star: 'routes',
-            strategy: require('./parser/router')
-        });
+            strategy: configureRoute
+        })
 
     return starMap.bigbang();
 };
