@@ -1,4 +1,6 @@
 const { mapValues, map, get, merge, isString, isArray } = require('lodash');
+
+const Promise = require('bluebird');
 const interpreter = require('../../interpreter');
 
 const normalizeRoutes = (routes, config) => mapValues(routes, methods => mapValues(methods, method => {
@@ -13,11 +15,11 @@ const normalizeRoutes = (routes, config) => mapValues(routes, methods => mapValu
     }
 
     if (!isArray(normalizedRoutes.call)) {
-        normalizedRoutes.call = [ normalizedRoutes.call ]
+        normalizedRoutes.call = [ normalizedRoutes.call ];
     }
 
     if (!isArray(normalizedRoutes.middlewares)) {
-        normalizedRoutes.middlewares = [ normalizedRoutes.middlewares ]
+        normalizedRoutes.middlewares = [ normalizedRoutes.middlewares ];
     }
 
     normalizedRoutes.call = map(normalizedRoutes.call, c => interpreter(c, config, 'controllers'));
@@ -103,7 +105,7 @@ exports.configureSession = config => {
     }
 
     return Promise.resolve(config);
-}
+};
 
 exports.configureRoute = (routes, config) => mapValues(require(routes), route => {
     const defaultApiModel = get(route, 'defaultAPI.model');

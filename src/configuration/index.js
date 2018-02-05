@@ -1,6 +1,6 @@
 const StarMap = require('star-mapper');
 const { configurePlugins, runPlugins } = require('./parser/plugins');
-const { configureRoute, configureSession } = require('./parser/router')
+const { configureRoute, configureSession } = require('./parser/router');
 
 const starMap = new StarMap({
     rootPath: process.cwd(),
@@ -41,7 +41,7 @@ module.exports = (configFile, routerFile) => {
             wait: [ 'modules', 'middlewares', 'plugins' ],
             star: 'routes',
             strategy: configureRoute
-        })
+        });
 
     return starMap.bigbang();
 };
