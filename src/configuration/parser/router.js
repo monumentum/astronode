@@ -95,10 +95,10 @@ exports.configureSession = config => {
 
         config.middlewares[authentication.name] = wrapper(middleware);
         config.controllers[authentication.name] = controller;
-        const routes = createAuthRoutes(authentication.name, config);
+        const routes = createAuthRoutes(authentication.name);
 
         if (!authentication.tokenActions.refresh) {
-            delete routes['/:id']['update'];
+            delete routes['/:id'];
         }
 
         config.routes[authentication.api.uri] = normalizeRoutes(routes, config);
