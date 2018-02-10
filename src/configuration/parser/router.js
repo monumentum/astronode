@@ -88,10 +88,11 @@ exports.configureSession = config => {
 
     if (authentication) {
         authentication.tokenActions = mapValues(authentication.tokenActions, (value) => interpreter(value, config, 'plugins'));
+        authentication.api.modelGetter = interpreter(authentication.api.modelGetter, config, 'plugins');
 
         const wrapper = interpreter(authentication.middlewares, config, 'plugins');
         const middleware = config.plugins[config.opts.engine].authenticationMiddleware(authentication.tokenActions.check);
-        const controller = config.plugins[config.opts.engine].authenticationController(authentication, config);
+        const controller = config.plugins[config.opts.engine].authenticationController(authentication);
 
         config.middlewares[authentication.name] = wrapper(middleware);
         config.controllers[authentication.name] = controller;

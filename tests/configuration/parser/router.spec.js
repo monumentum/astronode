@@ -21,6 +21,11 @@ describe('Configuration > Parse Plugins', () => {
         const engine = 'test';
         const uri = '/testauth';
         const authName = 'authTest';
+        const fakePlugin = {
+            name: 'someauthplug',
+            fn: jest.fn()
+        };
+
         const auth = {
             name: authName,
             methods: {
@@ -48,7 +53,7 @@ describe('Configuration > Parse Plugins', () => {
             name: authName,
             api: {
                 uri: uri,
-                model: 'user',
+                modelGetter: '!' + fakePlugin.name,
                 fieldsToCheck: [ 'email', 'password']
             },
             tokenActions: {
@@ -75,7 +80,8 @@ describe('Configuration > Parse Plugins', () => {
             },
             plugins: {
                 [engine]: fakeEngine,
-                [auth.name]: fakeAuthPlugin
+                [auth.name]: fakeAuthPlugin,
+                [fakePlugin.name]: fakePlugin.fn
             },
             middlewares: {},
             controllers: {},
