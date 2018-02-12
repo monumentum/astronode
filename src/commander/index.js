@@ -10,7 +10,7 @@ program.version(version);
 program
     .command('setup')
     .option('--engine', 'the engine adapter that you want')
-    .option('--driver', 'the driver adapter that you want')
+    .option('--data', 'the driver adapter that you want')
     .action(setupCallback);
 
 program.command('run')
