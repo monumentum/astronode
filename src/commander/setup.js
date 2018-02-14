@@ -31,8 +31,8 @@ module.exports = (engine, data) => {
     astronautConfig.engine = engine;
     astronautConfig.data = data;
 
-    astronode.plugins.push(basePlugin(data));
-    astronode.plugins.push(dataPlugin(data));
+    astronautConfig.plugins.push(basePlugin(engine));
+    astronautConfig.plugins.push(dataPlugin(data));
 
     const configFile = `${process.cwd()}/astronode.config.json`;
     const configJson = JSON.stringify(astronautConfig, null, 4);
