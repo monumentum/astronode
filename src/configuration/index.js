@@ -21,6 +21,7 @@ module.exports = (configFile, routerFile) => {
         .parsex('> opts.application.middlewares', {
             wait: [ 'opts' ],
             star: 'middlewares',
+            onFalsy: [],
             strategy: require
         })
         .parsex('> opts.application.modules', {

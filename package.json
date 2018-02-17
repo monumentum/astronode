@@ -7,7 +7,7 @@
     "astronode-utils": "^0.3.0",
     "bluebird": "^3.5.1",
     "commander": "^2.12.2",
-    "star-mapper": "^0.5.0"
+    "star-mapper": "^0.5.11"
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
