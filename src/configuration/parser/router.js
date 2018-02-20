@@ -109,7 +109,7 @@ exports.configureSession = config => {
 };
 
 exports.configureRoute = (routes, config) => mapValues(require(routes), route => {
-    const defaultApiModel = get(route, 'defaultAPI.model');
+    const defaultApiModel = get(route, 'defaultAPI.module');
     let subroutes = {};
 
     if (defaultApiModel) {

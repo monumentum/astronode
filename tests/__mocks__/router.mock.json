@@ -1,7 +1,7 @@
 {
     "/default": {
         "defaultAPI": {
-            "model": "test",
+            "module": "test",
             "middlewares": {
                 "/": {
                     "get": [ "fakeGetMiddleware" ]
@@ -21,7 +21,7 @@
     },
     "/override": {
         "defaultAPI": {
-            "model": "test"
+            "module": "test"
         },
         "routes": {
             "/": {
