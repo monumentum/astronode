@@ -12,17 +12,16 @@ const route = moduleName => ({
     }
 });
 
-const attachOnRouteFile = (moduleRoute, routeFile) => {
+const attachOnRouteFile = (moduleRoute, routeFile) =>
     readFileAsync(routeFile).then(value => {
         const routes = JSON.parse(value);
         const newRoutes = Object.assign(moduleRoute, routes);
         const newValue = JSON.stringify(newRoutes, null, 4);
 
-        return writeFileAsync(routeFile, newValue);
-    }).catch(() => {
+        return writeFileAsync(routeFile, newValue, { encoding:'utf8', flag:'w' });
+    }).catch(err => {
         return writeFileAsync(routeFile, JSON.stringify(moduleRoute, null, 4));
     });
-};
 
 module.exports = moduleName => {
     const routeFile = `${process.cwd()}/astronode.routes.json`;
