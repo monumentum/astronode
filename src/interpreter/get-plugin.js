@@ -14,6 +14,7 @@ module.exports = (name, config, prop) => {
         throw new MissingParameter('GetPlugin', 'config');
     }
 
+    let base = get(config, `${prop}.${action.base}`, null);
     let plugin = get(config, `${prop}.${action.name}`, null);
 
     if (!plugin) {
@@ -22,9 +23,9 @@ module.exports = (name, config, prop) => {
 
     if (action.chain) {
         action.chain.forEach(value => {
-            plugin = plugin.apply(null, value);
+            plugin = plugin.apply(base, value);
         });
     }
 
-    return plugin;
+    return plugin.bind(base);
 };

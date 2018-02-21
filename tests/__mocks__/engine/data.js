@@ -1,4 +1,4 @@
-const fakeReturn = 'METHOD_RESPONSE';
+const fakeReturn = () => false;
 module.exports = {
     fakeReturn,
     methods: {
@@ -8,4 +8,4 @@ module.exports = {
         delete: jest.fn().mockReturnValue(fakeReturn),
         create: jest.fn().mockReturnValue(fakeReturn),
     }
-}
+};
