@@ -30,4 +30,4 @@ module.exports = name => {
         name: getName(name),
         chain: getChain(name)
     }, removeEmptyChain);
-}
+};

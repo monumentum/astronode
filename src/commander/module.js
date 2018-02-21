@@ -19,7 +19,7 @@ const attachOnRouteFile = (moduleRoute, routeFile) =>
         const newValue = JSON.stringify(newRoutes, null, 4);
 
         return writeFileAsync(routeFile, newValue, { encoding:'utf8', flag:'w' });
-    }).catch(err => {
+    }).catch(() => {
         return writeFileAsync(routeFile, JSON.stringify(moduleRoute, null, 4));
     });
 
